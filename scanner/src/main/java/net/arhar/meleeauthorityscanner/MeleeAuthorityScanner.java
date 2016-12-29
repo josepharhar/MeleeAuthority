@@ -24,12 +24,12 @@ public class MeleeAuthorityScanner {
     if (args.length > 0) {
       imageFilename = args[0];
     }
-    if (!new File(args[0]).canRead()) {
-      System.out.println("unable to read file: " + args[0]);
+    if (!new File(imageFilename).canRead()) {
+      System.out.println("unable to read file \"" + imageFilename + "\"");
       return;
     }
 
-    MeleeImage image = new MeleeImage(args[0]);
+    MeleeImage image = new MeleeImage(imageFilename);
     MeleeImageFileSystem fileSystem = image.getFileSystem();
 
     //        Scanner reader = new Scanner(MeleeAuthorityScanner.class.getResourceAsStream("/anm/Ms.anm"));

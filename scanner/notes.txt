@@ -1,0 +1,116 @@
+LandingFallSpecial
+animation for wavedash landing
+
+Escape
+spot dodge
+
+KneeBend
+"jump squat"
+
+JumpF
+jump forward
+
+JumpB
+jump backward
+
+JumpAerial*
+double jump
+
+LandingAirF
+fair landing lag
+
+GuardOn
+start casting shield
+
+Guard
+shielding
+
+GuardOff
+stop shield casting - skipped for jump out of shield
+
+368
+marth up b
+
+FallSpecial
+post up-b "gimp"
+
+
+LandingAirLw
+without l cancel advances 0.94 "animation frames" per frame
+with l cancel - advances 1.88 frames per frame instead
+
+
+
+replacing ganons uptilt with falcons
+
+ganon uptilt command list start		PlGn.dat 0x7B80
+
+ganon subOffset				PlGn.dat 0x75F0
+AttackHi3 uptilt offset				 0x003A
+AttackHi3 uptilt offset * 6 * 4			 0x0570
+subOffset + x20 + xC + offset*6*4		 0x7B8C
+					PlGn.dat 0x7B8C = 0x00004850 -> +x20 points to command list
+
+so "subactionPointer" from crazy hand points to the green hilighted four bytes:
+http://smashboards.com/attachments/1-png.88524/
+
+character offset + subActionOffset*6*4 + 0x20 = "mother command"
+PlGn.dat:7B80 <- character offset + subactionoffset*6*4 + 0x20 "mother command"
+	[00,03] 0x00000824 ?
+	[04,07] 0x00054340 -> PlGnAJ.dat:0x54340 animation data?
+	[08,11] 0x000043AF -> length to read from in PlGnAJ.dat:0x54340
+	[12,15] 0x00004850 -> PlGn.dat:0x4850 add 0x20 to get animation command list
+	[16,19] 0x80000019 ?
+
+mother command bytes 5-8 -> x54340 in PlGnAJ.dat
+
+falcon uptilt command list start	PlCa.dat 0x4954
+subOffset + x20 + AttackHi3offset*6*4
+	x7a98 + x20 + x570		PlCa.dat 0x8028
+PlCa.dat 0x8028 mother command data
+	[00,03] 0x0000095C ?
+	[04,07] 0x00055E20 -> PlCaAJ.dat:55E20 uptilt animation data
+	[08,11] 0x000026C5 -> length in PlCaAj.dat
+	[12,15] 0x00004934 -> PlCa.dat:0x4934 + x20 to get to animation command list
+	[16,19] 0x80000002 ?
+
+i wonder if the length in Pl__AJ.dat determines the number of frames?
+falcon uptilt numframes: 39 0x27   float: 0x421C0000
+ganon uptilt numframes: 114 0x72
+nope.
+
+copying falcons shit into ganons
+falcon length: 26C5
+26C5 / F = 295 xxd lines to copy
+
+
+
+
+animation things
+waiting is shown as two things on the ingame display
+the first animation name column says "Wait"
+the second column either says "Wait1" or "Wait2" depending on the wait
+marths aerial up b:
+in game: 368 322 1.00
+in Ms.anm: SpecialAirHi 9292 712384 11281 130
+SubAction.java: (0x142, "Marth Up-B (Air)")
+
+
+
+falcon up tilt
+PlCaAJ.dat start 0x00055E20  <- header is 0x20 bytes
+    0x00: 0x000026C5 mini-dat size
+    0x04: 0x0000245C must be data section size
+    0x08: 0x00000085 ??
+    0x0C: 0x00000001 num animations thingy?
+0x00058288: root node thing with the frame length
+PlCaAJ.dat   end 0x000584e5
+
+rootOffset0 according to pl__.dat file structure
+2690 + 55E20 = 584B0
+root node data pointer: 0x00002448 -> 0x00058288
+got it!
+
+WallDamage
+id: 000  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 00004620 "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
+id: 0D4  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 0000620C "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"

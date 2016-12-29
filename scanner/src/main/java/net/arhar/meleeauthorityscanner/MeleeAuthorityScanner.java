@@ -20,9 +20,9 @@ public class MeleeAuthorityScanner {
   private static final String INDENT = "    ";
 
   public static void main(String[] args) throws IOException {
-    if (args.length < 1) {
-      System.out.println("usage: MeleeAuthorityScanner <melee.iso>");
-      return;
+    String imageFilename = "melee.iso";
+    if (args.length > 0) {
+      imageFilename = args[0];
     }
     if (!new File(args[0]).canRead()) {
       System.out.println("unable to read file: " + args[0]);

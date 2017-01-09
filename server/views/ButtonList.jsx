@@ -3,7 +3,7 @@ var React = require('react');
 var ButtonList = React.createClass({
   render: function() {
     var buttons = this.props.buttons.map(function(button) {
-      return (
+      if (button) return (
         <div>
           <a href={button.link}>
             <button>{button.name}</button>

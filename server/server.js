@@ -4,6 +4,10 @@ var morgan = require('morgan');
 var mysql = require('mysql');
 
 var connection = mysql.createConnection({
+  host: 'localhost',
+  user: 'jarhar',
+  password: 'jarhar',
+  database: 'melee',
   multipleStatements: true
 });
 connection.connect(function(err) {
@@ -47,10 +51,8 @@ app.get('/characters/:charId', function(req, res) {
       if (err) {
         console.log('query error: ' + err.stack);
       } else {
-        var charInfo = results[0];
-        var attributes = results[0];
         res.render('CharacterLayout', {
-          character: results[0][0].fullName,
+          character: results[0][0],
           attributes: results[1][0],
           animations: results[2]
         });
@@ -64,10 +66,22 @@ app.get('/characters/:charId', function(req, res) {
 app.get('/characters/:charId/:animation', function(req, res) {
   var charId = req.params.charId, animation = req.params.animation;
   // TODO input checking
-    /*connection.query(
+  connection.query(
+    // TODO remove case sensitivity from animation internalName for this query
     "SELECT * FROM Characters WHERE id = '" + charId + "';"
-      + "SELECT * FROM Animations WHERE internalName = '" + animation + "';"
-      + "SELECT * FROM */
+      + "SELECT * FROM Animations A"
+      + " JOIN Hitboxes H on H.charId = A.charId AND H.subActionId = A.subActionId"
+      + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "'",
+    function(err, results) {
+      if (err) {
+        console.log('query error: ' + err.stack);
+      } else {
+        res.render('AnimationLayout', {
+          character: results[0],
+          animation: results[1]
+        });
+      }
+  });
 });
 
 app.listen(process.env.PORT || 8080, function() {

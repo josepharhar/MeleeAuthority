@@ -6,7 +6,7 @@ var CharactersListLayout = React.createClass({
     var buttons = this.props.characters.map(function(character) {
       return {
         name: character.fullName,
-        link: 'characters/' + character.id
+        link: '/characters/' + character.id
       };
     });
 

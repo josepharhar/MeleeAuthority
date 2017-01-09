@@ -27,20 +27,26 @@ var CharacterAttributes = React.createClass({
 
 var CharacterLayout = React.createClass({
   render: function() {
-    var animations = this.props.animations.map(function(animation) {
-      if (animation.description != '(No Description') {
-        return animation.description;
+    var charId = this.props.character.id;
+    var buttons = this.props.animations.map(function(animation) {
+      // TODO (no description) should not be considered here, in java or something instead
+      if (animation.description != '(No Description)') {
+        return {
+          name: animation.description,
+          link: '/characters/' + charId + '/' + animation.internalName
+        };
       }
     });
+
     return (
       <html>
         <head>
-          <title>{this.props.character}</title>
+          <title>{this.props.character.fullName}</title>
         </head>
         <body>
-          <h1>{this.props.character}</h1>
+          <h1>{this.props.character.fullName}</h1>
           <CharacterAttributes attributes={this.props.attributes}/>
-          <ButtonList animations={animations}/>
+          <ButtonList buttons={buttons}/>
         </body>
       </html>
     );

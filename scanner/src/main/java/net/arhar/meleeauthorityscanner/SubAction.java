@@ -38,10 +38,7 @@ public class SubAction {
 
           .put(0x000, new SubAction())
           // TODO ...
-          .put(
-              0x00F,
-              new SubAction(
-                  "Jump Squat/Charge")) // this information is in the character attribute "JumpFrames"
+          .put(0x00F, new SubAction("Jump Squat/Charge")) // this information is in the character attribute "JumpFrames"
           .put(0x024, new SubAction("Special/Wavedash Landing Lag")) // this is broken?
           .put(0x025, new SubAction("Start Shield"))
           .put(0x027, new SubAction("Stop Shield"))

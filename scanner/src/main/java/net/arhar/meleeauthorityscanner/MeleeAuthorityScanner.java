@@ -42,9 +42,10 @@ public class MeleeAuthorityScanner {
 
     Path dirPath = Paths.get(DIRECTORY_NAME);
     Files.createDirectories(dirPath);
+    Files.createDirectories(Paths.get("json"));
 
     writeCharacters();
-    // TODO writeAttributes();
+    writeAttributes();
     writeCharacterAttributes(charactersToAttributes);
     writeAnimations(charactersToAnimations);
     writeAnimationCommandTypes();
@@ -54,6 +55,22 @@ public class MeleeAuthorityScanner {
     writeBuildScripts();
 
     System.out.println("Wrote sql folder to " + dirPath.toAbsolutePath());
+  }
+
+  private static void writeAttributesToJson(
+      Map<Character, Map<Attribute, Number>> charactersToAttributes) throws IOException {
+    BufferedWriter writer = Files.newBufferedWriter(Paths.get("json/attributes.json"));
+
+    writer.flush();
+    writer.close();
+  }
+
+  private static void writeAnimationsToJson(
+      Map<Character, List<Animation>> charactersToAnimations) throws IOException {
+    BufferedWriter writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
+
+    writer.flush();
+    writer.close();
   }
 
   private static void writeCharacters() throws IOException {
@@ -85,6 +102,36 @@ public class MeleeAuthorityScanner {
     writer.close();
   }
 
+  private static void writeAttributes() throws IOException {
+    BufferedWriter writer = Files.newBufferedWriter(Paths.get(DIRECTORY_NAME + "Attributes.sql"));
+
+    // CREATE TABLE
+    writer.write("CREATE TABLE Attributes (\n");
+    writer.write(INDENT + "id VARCHAR(32),\n");
+    writer.write(INDENT + "fullName VARCHAR(64),\n");
+    writer.write(INDENT + "basic BOOLEAN,\n");
+    writer.write(INDENT + "PRIMARY KEY (id)\n");
+    writer.write(");\n\n");
+    writer.flush();
+
+    // INSERT
+    writer.write("INSERT INTO Attributes\n");
+    writer.write(INDENT + "(id, fullName, basic)\n");
+    writer.write("VALUES\n");
+    boolean first = true;
+    for (Attribute attribute : Attribute.values()) {
+      if (first) {
+        first = false;
+      } else {
+        writer.write(",\n");
+      }
+      writer.write(INDENT + "('" + attribute.name() + "', '" + attribute.fullName + "', '" + attribute.basic + "')");
+    }
+    writer.write("\n");
+    writer.flush();
+    writer.close();
+  }
+
   private static void writeCharacterAttributes(
       Map<Character, Map<Attribute, Number>> charactersToAttributes) throws IOException {
     BufferedWriter writer =
@@ -94,14 +141,9 @@ public class MeleeAuthorityScanner {
     writer.write("CREATE TABLE CharacterAttributes (\n");
     writer.write(INDENT + "id CHAR(2),\n");
     for (Attribute attribute : Attribute.values()) {
-      if (attribute.known) {
-        writer.write(
-            INDENT
-                + attribute.name()
-                + " "
-                + attribute.numberType.getSimpleName().toUpperCase()
-                + ",\n");
-      }
+      //if (attribute.known) {
+        writer.write(INDENT + attribute.name() + " " + attribute.numberType.getSimpleName().toUpperCase() + ",\n");
+      //}
     }
     writer.write(INDENT + "PRIMARY KEY (id),\n");
     writer.write(INDENT + "FOREIGN KEY (id) REFERENCES Characters(id)\n");
@@ -112,9 +154,9 @@ public class MeleeAuthorityScanner {
     writer.write("INSERT INTO CharacterAttributes\n");
     writer.write(INDENT + "(id");
     for (Attribute attribute : Attribute.values()) {
-      if (attribute.known) {
+      //if (attribute.known) {
         writer.write(", " + attribute.name());
-      }
+      //}
     }
     writer.write(")\n");
     writer.write("VALUES\n");
@@ -316,8 +358,7 @@ public class MeleeAuthorityScanner {
     writer.write(INDENT + "autocancel BOOLEAN,\n");
     writer.write(INDENT + "PRIMARY KEY (id),\n");
     writer.write(INDENT + "UNIQUE (charId, subActionId, frame),\n");
-    writer.write(
-        INDENT + "FOREIGN KEY (charId, subActionId) REFERENCES Animations(charId, subActionId)\n");
+    writer.write(INDENT + "FOREIGN KEY (charId, subActionId) REFERENCES Animations(charId, subActionId)\n");
     writer.write(");\n\n");
     writer.flush();
 
@@ -410,8 +451,7 @@ public class MeleeAuthorityScanner {
     writer.write(INDENT + "PRIMARY KEY (id),\n");
     // TODO apparently you can have multiple hitboxes with the same id in the same group, see Kirby subAction 243
     //        writer.write(INDENT + "UNIQUE (charId, subActionId, groupId, hitboxId),\n");
-    writer.write(
-        INDENT + "FOREIGN KEY (charId, subActionId) REFERENCES Animations(charId, subActionId)\n");
+    writer.write(INDENT + "FOREIGN KEY (charId, subActionId) REFERENCES Animations(charId, subActionId)\n");
     writer.write(");\n\n");
     writer.flush();
 
@@ -479,6 +519,7 @@ public class MeleeAuthorityScanner {
   private static void writeBuildScripts() throws IOException {
     BufferedWriter buildWriter = Files.newBufferedWriter(Paths.get(DIRECTORY_NAME + "build.sql"));
     buildWriter.write("source Characters.sql\n");
+    buildWriter.write("source Attributes.sql\n");
     buildWriter.write("source CharacterAttributes.sql\n");
     buildWriter.write("source Animations.sql\n");
     buildWriter.write("source AnimationCommandTypes.sql\n");
@@ -495,6 +536,7 @@ public class MeleeAuthorityScanner {
     cleanWriter.write("DROP TABLE IF EXISTS AnimationCommandTypes;\n");
     cleanWriter.write("DROP TABLE IF EXISTS Animations;\n");
     cleanWriter.write("DROP TABLE IF EXISTS CharacterAttributes;\n");
+    cleanWriter.write("DROP TABLE IF EXISTS Attributes;\n");
     cleanWriter.write("DROP TABLE IF EXISTS Characters;\n");
     cleanWriter.flush();
     cleanWriter.close();

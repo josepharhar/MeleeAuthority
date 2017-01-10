@@ -25,6 +25,10 @@ app.engine('jsx', reactViews.createEngine());
 
 app.use('/static', express.static('static'));
 
+app.get('/', function(req, res) {
+  res.redirect('/characters');
+});
+
 app.get('/characters', function(req, res) {
   connection.query("SELECT * FROM Characters", function(err, results) {
     if (err) {
@@ -71,6 +75,9 @@ app.get('/characters/:charId/:animation', function(req, res) {
     "SELECT * FROM Characters WHERE id = '" + charId + "';"
       + "SELECT * FROM Animations A"
       + " JOIN Hitboxes H on H.charId = A.charId AND H.subActionId = A.subActionId"
+      + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "';"
+      + "SELECT * FROM Animations A"
+      + " JOIN FrameStrips F on F.charId = A.charId AND F.subActionId = A.subActionId"
       + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "'",
     function(err, results) {
       if (err) {
@@ -78,7 +85,8 @@ app.get('/characters/:charId/:animation', function(req, res) {
       } else {
         res.render('AnimationLayout', {
           character: results[0],
-          animation: results[1]
+          animation: results[1],
+          frameStrip: results[2]
         });
       }
   });

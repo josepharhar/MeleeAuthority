@@ -1,36 +1,25 @@
 var React = require('react');
 
-var AnimationLayout = React.createClass({
+var toTableData = function(entries) {
+  return entries.map(function(entry) {
+    return <td>{entry}</td>;
+  });
+};
 
+var HitboxesTable = React.createClass({
   render: function() {
-    console.log('this.props.animation: ' + JSON.stringify(this.props.animation));
-
-    var hitboxesTableHead = [];
+    var tableHead = [];
     for (var key in this.props.animation[0]) {
-      hitboxesTableHead.push(this.props.animation[0][key]);
+      tableHead.push(key);
     }
-    hitboxesTableHead = hitboxesTableHead.map(function(entry) {
-      return (
-        <td>
-      );
-    });
+    tableHead = toTableData(tableHead);
 
-    var hitboxesTableBody = this.props.animation.map(function(hitbox) {
+    var tableBody = this.props.animation.map(function(hitbox) {
       var columns = [];
       for (var key in hitbox) {
         columns.push(hitbox[key]);
       }
-      columns = columns.map(function(entry) {
-        return <td>{entry}</td>;
-      });
-
-      var header = [];
-      for (var key in hitbox) {
-        header.push(key);
-      }
-      header = header.map(function(entry) {
-        return <td>{entry}</td>
-      });
+      columns = toTableData(columns);
 
       return (
         <tr>{columns}</tr>
@@ -38,12 +27,31 @@ var AnimationLayout = React.createClass({
     });
 
     return (
+      <table>
+        <thead><tr>{tableHead}</tr></thead>
+        <tbody>{tableBody}</tbody>
+      </table>
+    );
+  }
+});
+
+var FrameStripTable = React.createClass({
+  render: function() {
+    return <p>framestriptable</p>;
+  }
+});
+
+var AnimationLayout = React.createClass({
+  render: function() {
+    console.log('framestrip: ' + JSON.stringify(this.props.frameStrip));
+    return (
       <html>
         <head>
           <title>animationnamegoeshere</title>
         </head>
         <body>
-          <table><tbody>{hitboxes}</tbody></table>
+          <HitboxesTable animation={this.props.animation}/>
+          <HitboxesTable animation={this.props.frameStrip}/>
         </body>
       </html>
     );

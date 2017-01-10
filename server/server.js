@@ -72,21 +72,28 @@ app.get('/characters/:charId/:animation', function(req, res) {
   // TODO input checking
   connection.query(
     // TODO remove case sensitivity from animation internalName for this query
+    // TODO select only columns to be showed on webpage
     "SELECT * FROM Characters WHERE id = '" + charId + "';"
-      + "SELECT * FROM Animations A"
-      + " JOIN Hitboxes H on H.charId = A.charId AND H.subActionId = A.subActionId"
+      + "SELECT H.groupId AS 'Group', H.hitboxId AS id, H.bone AS Bone, H.damage AS Damage,"
+      + " H.zoffset AS 'Z Offset', H.yoffset AS 'Y Offset', H.xoffset AS 'X Offset',"
+      + " H.angle AS Angle, H.knockbackScaling AS 'Knockback Scaling',"
+      + " H.fixedKnockback AS 'Fixed Knockback', H.baseKnockback AS 'Base Knockback',"
+      + " H.shieldDamage AS 'Shield Damage'"
+      + " FROM Animations A JOIN Hitboxes H on H.charId = A.charId AND H.subActionId = A.subActionId"
       + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "';"
-      + "SELECT * FROM Animations A"
-      + " JOIN FrameStrips F on F.charId = A.charId AND F.subActionId = A.subActionId"
-      + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "'",
+      + "SELECT F.frame AS Frame, F.hitbox AS Hitbox, F.iasa AS IASA, F.autocancel AS Autocancel"
+      + " FROM Animations A JOIN FrameStrips F on F.charId = A.charId AND F.subActionId = A.subActionId"
+      + " WHERE A.charId = '" + charId + "' AND A.internalName = '" + animation + "';"
+      + "SELECT * FROM Animations WHERE charId = '" + charId + "' AND internalName = '" + animation + "'",
     function(err, results) {
       if (err) {
         console.log('query error: ' + err.stack);
       } else {
         res.render('AnimationLayout', {
-          character: results[0],
-          animation: results[1],
-          frameStrip: results[2]
+          character: results[0][0],
+          hitboxes: results[1],
+          frameStrip: results[2],
+          animation: results[3][0]
         });
       }
   });

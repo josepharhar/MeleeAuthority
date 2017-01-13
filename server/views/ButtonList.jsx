@@ -5,9 +5,7 @@ var ButtonList = React.createClass({
     var buttons = this.props.buttons.map(function(button) {
       if (button) return (
         <div>
-          <a href={button.link}>
-            <button>{button.name}</button>
-          </a>
+          <a href={button.link} className="btn btn-default btn-primary">{button.name}</a>
         </div>
       );
     });

@@ -1,5 +1,7 @@
 var React = require('react');
 var ButtonList = require('./ButtonList');
+var HeadScripts = require('./HeadScripts');
+var BodyScripts = require('./BodyScripts');
 
 var CharacterAttributes = React.createClass({
   render: function() {
@@ -42,11 +44,13 @@ var CharacterLayout = React.createClass({
       <html>
         <head>
           <title>{this.props.character.fullName}</title>
+          <HeadScripts />
         </head>
         <body>
           <h1>{this.props.character.fullName}</h1>
           <CharacterAttributes attributes={this.props.attributes}/>
           <ButtonList buttons={buttons}/>
+          <BodyScripts />
         </body>
       </html>
     );

@@ -2,15 +2,6 @@ var React = require('react');
 var HeadScripts = require('./HeadScripts');
 var BodyScripts = require('./BodyScripts');
 
-var frameStripStyleTrue = {
-  'padding': '1px',
-  'background-color': 'red'
-};
-
-var frameStripStyleFalse = {
-  'padding': '1px'
-};
-
 var toTableHead = function(entries) {
   return entries.map(function(entry) {
     return <th>{entry}</th>;
@@ -35,8 +26,8 @@ var getKeys = function(tuples) {
   return keys;
 }
 
-var HitboxesTable = React.createClass({
-  render: function() {
+class HitboxesTable extends React.Component {
+  render() {
     var tableHead = toTableHead(getKeys(this.props.hitboxes));
 
     var tableBody = this.props.hitboxes.map(function(hitbox) {
@@ -58,10 +49,25 @@ var HitboxesTable = React.createClass({
       </table>
     );
   }
-});
+}
 
-var FrameStripTable = React.createClass({
-  render: function() {
+class FrameStripTable extends React.Component {
+  render() {
+    var frameStripStyle = {
+      'width': '16px',
+      'height': '16px'
+    };
+    var frameStripHeaderStyle = {
+      'height': '16px'
+    };
+    var frameStripStyleTrue = {
+      'background-color': 'red'
+    };
+    Object.assign(frameStripStyleTrue, frameStripStyle);
+    var frameStripStyleFalse = {
+    };
+    Object.assign(frameStripStyleFalse, frameStripStyle);
+
     var frameStrip = this.props.frameStrip;
     // turn columns into rows
     var keys = getKeys(frameStrip);
@@ -73,11 +79,23 @@ var FrameStripTable = React.createClass({
         row.push(frameStrip[i][key]);
       }
       var rofl = row.map(function(entry) {
-        return <td>{entry}</td>;
+        if (key == 'Frame') {
+          // TODO there should be a better way to do this
+          return (
+            <th style={frameStripStyle}>{entry}</th>
+          );
+        }
+        if (entry == '1') {
+          return <td style={frameStripStyleTrue}></td>
+        }
+        if (entry == '0') {
+          return <td style={frameStripStyleFalse}></td>
+        }
+        return <td style={frameStripStyle}>{entry}</td>;
       });
       return (
         <tr>
-          <th>{key}</th>
+          <th style={frameStripHeaderStyle}>{key}</th>
           {rofl}
         </tr>
       );
@@ -89,7 +107,8 @@ var FrameStripTable = React.createClass({
       'cellspacing': '0',
       'padding': '0',
       'margin': '0',
-      'border-collapse': 'collapse'
+      'border-collapse': 'collapse',
+      'width': 'auto'
     };
     return (
       <table className="table table-hover table-bordered" style={style}>
@@ -97,10 +116,10 @@ var FrameStripTable = React.createClass({
       </table>
     );
   }
-});
+}
 
-var AnimationLayout = React.createClass({
-  render: function() {
+class AnimationLayout extends React.Component {
+  render() {
     console.log('animation: ' + JSON.stringify(this.props.animation));
     var title = this.props.character.fullName + ' - ' + this.props.animation.description;
     return (
@@ -120,6 +139,6 @@ var AnimationLayout = React.createClass({
       </html>
     );
   }
-});
+}
 
 module.exports = AnimationLayout;

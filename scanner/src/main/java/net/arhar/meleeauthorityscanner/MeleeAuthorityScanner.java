@@ -17,7 +17,7 @@ import net.arhar.meleeauthorityscanner.Animation.FrameStripType;
 public class MeleeAuthorityScanner {
 
   private static final String DIRECTORY_NAME = "sql/";
-  private static final String INDENT = "    ";
+  private static final String INDENT = "  ";
 
   public static void main(String[] args) throws IOException {
     String imageFilename = "melee.iso";
@@ -42,7 +42,6 @@ public class MeleeAuthorityScanner {
 
     Path dirPath = Paths.get(DIRECTORY_NAME);
     Files.createDirectories(dirPath);
-    Files.createDirectories(Paths.get("json"));
 
     writeCharacters();
     writeAttributes();
@@ -55,22 +54,10 @@ public class MeleeAuthorityScanner {
     writeBuildScripts();
 
     System.out.println("Wrote sql folder to " + dirPath.toAbsolutePath());
-  }
 
-  private static void writeAttributesToJson(
-      Map<Character, Map<Attribute, Number>> charactersToAttributes) throws IOException {
-    BufferedWriter writer = Files.newBufferedWriter(Paths.get("json/attributes.json"));
-
-    writer.flush();
-    writer.close();
-  }
-
-  private static void writeAnimationsToJson(
-      Map<Character, List<Animation>> charactersToAnimations) throws IOException {
-    BufferedWriter writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
-
-    writer.flush();
-    writer.close();
+    Path jsonPath = Paths.get("json");
+    Files.createDirectories(jsonPath);
+    new JSONWriter(jsonPath).write(charactersToAttributes, charactersToAnimations);
   }
 
   private static void writeCharacters() throws IOException {

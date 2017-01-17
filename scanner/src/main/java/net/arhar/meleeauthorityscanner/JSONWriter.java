@@ -48,7 +48,7 @@ public class JSONWriter {
       } else {
         format = "%s,\n";
       }
-      builder.append(String.format(format, values.get(i), values.get(i + 1)));
+      builder.append(String.format(format, values.get(i)));
     }
     builder.append("]");
     return builder.toString();
@@ -74,7 +74,7 @@ public class JSONWriter {
           .collect(Collectors.toList())));
 
     writer = Files.newBufferedWriter(Paths.get("json/character_attributes.json"));
-    writer.write(toObject(charactersToAttributes.entrySet().stream()
+    /*writer.write(toObject(charactersToAttributes.entrySet().stream()
           .flatMap(characterAndAttributes -> Stream.of(
               characterAndAttributes.getKey().name(),
               toObject(characterAndAttributes.getValue().entrySet().stream()
@@ -82,7 +82,20 @@ public class JSONWriter {
                     attributeToNumber.getKey().name(),
                     attributeToNumber.getValue().toString()))
                 .collect(Collectors.toList()))))
-          .collect(Collectors.toList())));
+          .collect(Collectors.toList())));*/
+    List<String> characterAttributes = new LinkedList<>();
+    for (Map.Entry<Character, Map<Attribute, Number>> characterAndAttributes : charactersToAttributes.entrySet()) {
+      List<String> attributes = new LinkedList<>();
+      for (Map.Entry<Attribute, Number> attributeAndValue : characterAndAttributes.getValue().entrySet()) {
+        attributes.add(attributeAndValue.getKey().name());
+        attributes.add(attributeAndValue.getValue().toString());
+      }
+
+      characterAttributes.add(toObject(
+            characterAndAttributes.getKey().name(),
+            toObject(attributes)));
+    }
+    writer.write(toObject(characterAttributes));
 
     writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
     writer.write(toObject(charactersToAnimations.entrySet().stream()
@@ -97,9 +110,12 @@ public class JSONWriter {
                     "animationCategory", "\"" + animation.description.category.name() + "\"",
                     "viewCategory", "\"" + animation.description.viewCategory.name() + "\"",
                     "hitboxes", toArray(animation.frameToHitboxes.entrySet().stream()
-                      .flatMap(frameAndHitbox -> frameAndHitbox.getValue().stream())
-                      .flatMap(frameAndHitbox -> toObject(
-                          "Frame", frameAndHitbox.getKey(),
+                      .flatMap(frameAndHitboxes -> {
+                        return frameAndHitboxes.getValue().stream()
+                          .map(hitbox -> new SimpleEntry<Integer, Hitbox>(frameAndHitboxes.getKey(), hitbox));
+                      })
+                      .map(frameAndHitbox -> toObject(
+                          "Frame", String.valueOf(frameAndHitbox.getKey()),
                           "ID", String.valueOf(frameAndHitbox.getValue().id),
                           "Bone", String.valueOf(frameAndHitbox.getValue().bone),
                           "Damage", String.valueOf(frameAndHitbox.getValue().damage),
@@ -113,7 +129,7 @@ public class JSONWriter {
                           "Shield Damage", String.valueOf(frameAndHitbox.getValue().shieldDamage)))
                       .collect(Collectors.toList())),
                     "frameStrip", toArray(animation.frameStrip.stream()
-                      .flatMap(frame -> toObject(
+                      .map(frame -> toObject(
                           "Hitbox", String.valueOf(frame.hitbox),
                           "IASA", String.valueOf(frame.iasa),
                           "Autocancel", String.valueOf(frame.autocancel)))
@@ -123,11 +139,5 @@ public class JSONWriter {
           .collect(Collectors.toList())));
 
     writer = Files.newBufferedWriter(Paths.get("json/animation_command_types.json"));
-
-    writer = Files.newBufferedWriter(Paths.get("json/character_animation_commands.json"));
-
-    writer = Files.newBufferedWriter(Paths.get("json/frame_strips.json"));
-
-    writer = Files.newBufferedWriter(Paths.get("json/hitboxes.json"));
   }
 }

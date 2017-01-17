@@ -112,7 +112,7 @@ public class MeleeAuthorityScanner {
       } else {
         writer.write(",\n");
       }
-      writer.write(INDENT + "('" + attribute.name() + "', '" + attribute.fullName + "', '" + attribute.basic + "')");
+      writer.write(INDENT + "('" + attribute.name() + "', '" + attribute.fullName + "', '" + (attribute.viewCategory == ViewCategory.BASIC) + "')");
     }
     writer.write("\n");
     writer.flush();

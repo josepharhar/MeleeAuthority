@@ -18,39 +18,6 @@ public class JSONWriter {
     this.outputPath = outputPath;
   }
 
-  private void writeArray(List<String> values) throws IOException {
-    writer.write("[\n");
-    for (int i = 0; i < values.size(); i++) {
-      String format;
-      if (i == values.size() - 1) {
-        format = INDENT + "\"%s\"\n";
-      } else {
-        format = INDENT + "\"%s\",\n";
-      }
-      writer.write(String.format(format, values.get(i)));
-    }
-    writer.write("]\n");
-    writer.flush();
-  }
-
-  private String toObject(Map<String, String> properties) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("{\n");
-    Iterator<Map.Entry<String, String>> iterator = properties.entrySet().iterator();
-    while (iterator.hasNext()) {
-      Map.Entry<String, String> property = iterator.next();
-      String format;
-      if (iterator.hasNext()) {
-        format = INDENT + "\"%s\": \"%s\",\n";
-      } else {
-        format = INDENT + "\"%s\": \"%s\"\n";
-      }
-      builder.append(String.format(format, property.getKey(), property.getValue()));
-    }
-    builder.append("}\n");
-    return builder.toString();
-  }
-
   private String toObject(String... values) {
     return toObject(Arrays.asList(values));
   }
@@ -61,13 +28,29 @@ public class JSONWriter {
     for (int i = 0; i < values.size(); i += 2) {
       String format;
       if (i == values.size() - 2) {
-        format = INDENT + "\"%s\": \"%s\"\n";
+        format = "\"%s\": %s\n";
       } else {
-        format = INDENT + "\"%s\": \"%s\",\n";
+        format = "\"%s\": %s,\n";
       }
       builder.append(String.format(format, values.get(i), values.get(i + 1)));
     }
-    builder.append("}\n");
+    builder.append("}");
+    return builder.toString();
+  }
+
+  private String toArray(List<String> values) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("[\n");
+    for (int i = 0; i < values.size(); i++) {
+      String format;
+      if (i == values.size() - 1) {
+        format = "%s\n";
+      } else {
+        format = "%s,\n";
+      }
+      builder.append(String.format(format, values.get(i), values.get(i + 1)));
+    }
+    builder.append("]");
     return builder.toString();
   }
 
@@ -78,33 +61,51 @@ public class JSONWriter {
 
     writer = Files.newBufferedWriter(Paths.get("json/characters.json"));
     writer.write(toObject(Arrays.stream(Character.values())
-          .flatMap(character -> Stream.of(character.name(), character.fullName))
+          .flatMap(character -> Stream.of(character.name(), "\"" + character.fullName + "\""))
           .collect(Collectors.toList())));
     writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/attributes.json"));
     writer.write(toObject(Arrays.stream(Attribute.values())
-          .map(attribute -> toObject(
-              "fullName", attribute.fullName,
-              "viewCategory", attribute.viewCategory.name()))
+          .flatMap(attribute -> Stream.of(
+              attribute.name(),
+              toObject(
+                "fullName", "\"" + attribute.fullName + "\"",
+                "viewCategory", "\"" + attribute.viewCategory.name() + "\"")))
           .collect(Collectors.toList())));
     writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/character_attributes.json"));
-    /*writer.write("{\n");
-    charactersToAttributes.forEach
-    writer.write("}\n");
-    writer.flush();
-    writer.close();*/
+    writer.write(toObject(charactersToAttributes.entrySet().stream()
+          .flatMap(characterAndAttributes -> Stream.of(
+              characterAndAttributes.getKey().name(),
+              toObject(characterAndAttributes.getValue().entrySet().stream()
+                .flatMap(attributeToNumber -> Stream.of(
+                    attributeToNumber.getKey().name(),
+                    attributeToNumber.getValue().toString()))
+                .collect(Collectors.toList()))))
+          .collect(Collectors.toList())));
+    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
+    writer.write(toObject(charactersToAnimations.entrySet().stream()
+          .flatMap(characterAndAnimations -> Stream.of(
+              characterAndAnimations.getKey().name(),
+              toObject(characterAndAttributes.getValue().stream()
+                .flatMap(animation -> Stream.of(
+                    animation.
+    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/animation_command_types.json"));
+    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/character_animation_commands.json"));
+    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/frame_strips.json"));
+    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/hitboxes.json"));
+    writer.close();
   }
 }

@@ -1,3 +1,7 @@
 target/
 .settings/
 melee.iso
+json/
+.classpath
+.project
+sql/

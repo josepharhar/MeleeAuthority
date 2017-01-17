@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import net.arhar.meleeauthorityscanner.Animation.AnimationCommand;
-import net.arhar.meleeauthorityscanner.Animation.FrameStripType;
 
 public class MeleeAuthorityScanner {
 
@@ -40,7 +39,7 @@ public class MeleeAuthorityScanner {
     Map<Character, Map<Attribute, Number>> charactersToAttributes =
         DatReader.readAllAttributes(fileSystem);
 
-    Path dirPath = Paths.get(DIRECTORY_NAME);
+    /*Path dirPath = Paths.get(DIRECTORY_NAME);
     Files.createDirectories(dirPath);
 
     writeCharacters();
@@ -53,14 +52,14 @@ public class MeleeAuthorityScanner {
     writeHitboxes(charactersToAnimations);
     writeBuildScripts();
 
-    System.out.println("Wrote sql folder to " + dirPath.toAbsolutePath());
+    System.out.println("Wrote sql folder to " + dirPath.toAbsolutePath());*/
 
     Path jsonPath = Paths.get("json");
     Files.createDirectories(jsonPath);
     new JSONWriter(jsonPath).write(charactersToAttributes, charactersToAnimations);
   }
 
-  private static void writeCharacters() throws IOException {
+  /*private static void writeCharacters() throws IOException {
     BufferedWriter writer = Files.newBufferedWriter(Paths.get(DIRECTORY_NAME + "Characters.sql"));
 
     // CREATE TABLE
@@ -551,5 +550,5 @@ public class MeleeAuthorityScanner {
     } catch (IOException e) {
       throw new RuntimeException(e);
     }
-  }
+  }*/
 }

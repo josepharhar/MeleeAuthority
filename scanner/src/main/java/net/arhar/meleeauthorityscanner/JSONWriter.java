@@ -63,7 +63,6 @@ public class JSONWriter {
     writer.write(toObject(Arrays.stream(Character.values())
           .flatMap(character -> Stream.of(character.name(), "\"" + character.fullName + "\""))
           .collect(Collectors.toList())));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/attributes.json"));
     writer.write(toObject(Arrays.stream(Attribute.values())
@@ -73,7 +72,6 @@ public class JSONWriter {
                 "fullName", "\"" + attribute.fullName + "\"",
                 "viewCategory", "\"" + attribute.viewCategory.name() + "\"")))
           .collect(Collectors.toList())));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/character_attributes.json"));
     writer.write(toObject(charactersToAttributes.entrySet().stream()
@@ -85,27 +83,51 @@ public class JSONWriter {
                     attributeToNumber.getValue().toString()))
                 .collect(Collectors.toList()))))
           .collect(Collectors.toList())));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
     writer.write(toObject(charactersToAnimations.entrySet().stream()
           .flatMap(characterAndAnimations -> Stream.of(
               characterAndAnimations.getKey().name(),
-              toObject(characterAndAttributes.getValue().stream()
+              toObject(characterAndAnimations.getValue().stream()
                 .flatMap(animation -> Stream.of(
-                    animation.
-    writer.close();
+                    "subActionId", String.valueOf(animation.subActionId),
+                    "internalName", "\"" + animation.internalName + "\"",
+                    //"description", "\"" + animation.description + "\""))
+                    "description", "\"" + animation.description.description + "\"",
+                    "animationCategory", "\"" + animation.description.category.name() + "\"",
+                    "viewCategory", "\"" + animation.description.viewCategory.name() + "\"",
+                    "hitboxes", toArray(animation.frameToHitboxes.entrySet().stream()
+                      .flatMap(frameAndHitbox -> frameAndHitbox.getValue().stream())
+                      .flatMap(frameAndHitbox -> toObject(
+                          "Frame", frameAndHitbox.getKey(),
+                          "ID", String.valueOf(frameAndHitbox.getValue().id),
+                          "Bone", String.valueOf(frameAndHitbox.getValue().bone),
+                          "Damage", String.valueOf(frameAndHitbox.getValue().damage),
+                          "Z Offset", String.valueOf(frameAndHitbox.getValue().zoffset),
+                          "Y Offset", String.valueOf(frameAndHitbox.getValue().yoffset),
+                          "X Offset", String.valueOf(frameAndHitbox.getValue().xoffset),
+                          "Angle", String.valueOf(frameAndHitbox.getValue().angle),
+                          "Knockback Scaling", String.valueOf(frameAndHitbox.getValue().knockbackScaling),
+                          "Fixed Knockback", String.valueOf(frameAndHitbox.getValue().fixedKnockback),
+                          "Base Knockback", String.valueOf(frameAndHitbox.getValue().baseKnockback),
+                          "Shield Damage", String.valueOf(frameAndHitbox.getValue().shieldDamage)))
+                      .collect(Collectors.toList())),
+                    "frameStrip", toArray(animation.frameStrip.stream()
+                      .flatMap(frame -> toObject(
+                          "Hitbox", String.valueOf(frame.hitbox),
+                          "IASA", String.valueOf(frame.iasa),
+                          "Autocancel", String.valueOf(frame.autocancel)))
+                      .collect(Collectors.toList()))))
+                    // TODO animation commands here
+                  .collect(Collectors.toList()))))
+          .collect(Collectors.toList())));
 
     writer = Files.newBufferedWriter(Paths.get("json/animation_command_types.json"));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/character_animation_commands.json"));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/frame_strips.json"));
-    writer.close();
 
     writer = Files.newBufferedWriter(Paths.get("json/hitboxes.json"));
-    writer.close();
   }
 }

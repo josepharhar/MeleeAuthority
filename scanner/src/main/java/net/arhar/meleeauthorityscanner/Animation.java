@@ -17,12 +17,12 @@ public class Animation {
 
   public final float frameCount;
   public final List<AnimationCommand> commands;
-  public final List<EnumSet<FrameStripType>> frameStrip;
-  public final List<List<Hitbox>> hitboxes; // group to list of hitboxes
+  public final List<FrameStripEntry> frameStrip;
+  public final Map<Integer, List<Hitbox>> frameToHitboxes;
 
   public final String internalName;
-  public final String description;
   public final int subActionId;
+  public final SubAction.SubActionDescription description;
 
   // TODO remove this
   public static boolean temp = false;
@@ -39,10 +39,9 @@ public class Animation {
 
     this.frameCount = ajHeader.frameCount;
 
-    // add description
     this.subActionId = subActionId;
     this.internalName = motherCommand.shortName;
-    this.description = SubAction.getDescription(character, subActionId).description;
+    this.description = SubAction.getDescription(character, subActionId);
 
     // parse the commands from the file
     commands = new ArrayList<>();
@@ -64,8 +63,7 @@ public class Animation {
       pldat.position(commandListOffset + bytesDown);
     }
 
-    Map<Integer, List<Hitbox>> hitboxMap =
-        new TreeMap<>((one, two) -> one - two); // TODO this could be the wrong order
+    frameToHitboxes = new TreeMap<>((one, two) -> one - two); // TODO this could be the wrong order
 
     boolean iasa = false;
     boolean hitbox = false;
@@ -73,9 +71,7 @@ public class Animation {
     Iterator<AnimationCommand> commandIterator = commands.iterator();
     int waitFrames = 0;
     int currentFrame = 1; // start frame numbering at 1 instead of 0
-    int totalFrames =
-        (int)
-            frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
+    int totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
     frameLoop:
     while (commandIterator.hasNext()
         || waitFrames > 0
@@ -110,8 +106,8 @@ public class Animation {
             break;
           case HITBOX:
             // add the hitbox
-            hitboxMap.putIfAbsent(currentFrame, new ArrayList<>());
-            hitboxMap.get(currentFrame).add(new Hitbox(command.data));
+            frameToHitboxes.putIfAbsent(currentFrame, new ArrayList<>());
+            frameToHitboxes.get(currentFrame).add(new Hitbox(command.data));
             hitbox = true;
             break;
           case IASA:
@@ -169,38 +165,26 @@ public class Animation {
         }
         currentFrame++;
 
-        Set<FrameStripType> stripEntry = new HashSet<>();
-        if (iasa) {
-          stripEntry.add(FrameStripType.IASA);
-        }
-        if (hitbox) {
-          stripEntry.add(FrameStripType.HITBOX);
-        }
-        if (autocancel) {
-          stripEntry.add(FrameStripType.AUTOCANCEL);
-        }
-        frameStrip.add(Sets.newEnumSet(stripEntry, FrameStripType.class));
+        frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
       }
     }
-
-    // convert the hitboxes to "groups" of hitboxes based on what frame they start on
-    hitboxes = new ArrayList<>();
-    // assuming .forEach will go over the set TreeMap iteration order
-    hitboxMap.forEach(
-        (frame, hitboxSet) -> {
-          hitboxes.add(hitboxSet);
-        });
 
     if (temp) {
       System.out.println();
     }
   }
 
-  public static enum FrameStripType {
-    IASA,
-    HITBOX,
-    AUTOCANCEL
+  public static class FrameStripEntry {
+    public final boolean iasa;
+    public final boolean hitbox;
+    public final boolean autocancel;
     // TODO add invulnerability, etc. here
+
+    public FrameStripEntry(boolean iasa, boolean hitbox, boolean autocancel) {
+      this.iasa = iasa;
+      this.hitbox = hitbox;
+      this.autocancel = autocancel;
+    }
   }
 
   public static class AnimationCommand {

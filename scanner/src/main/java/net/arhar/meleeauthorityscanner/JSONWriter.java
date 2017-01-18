@@ -3,63 +3,38 @@ package net.arhar.meleeauthorityscanner;
 import java.io.*;
 import java.nio.file.*;
 import java.util.*;
-import java.util.AbstractMap.SimpleEntry;
 import java.util.stream.*;
+
+import com.fasterxml.jackson.databind.*;
+import com.google.common.collect.*;
 
 public class JSONWriter {
 
-  private static final String INDENT = "  ";
-
   private final Path outputPath;
-
-  private BufferedWriter writer;
 
   public JSONWriter(Path outputPath) {
     this.outputPath = outputPath;
   }
 
-  private String toObject(String... values) {
-    return toObject(Arrays.asList(values));
-  }
-
-  private String toObject(List<String> values) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("{\n");
-    for (int i = 0; i < values.size(); i += 2) {
-      String format;
-      if (i == values.size() - 2) {
-        format = "\"%s\": %s\n";
-      } else {
-        format = "\"%s\": %s,\n";
-      }
-      builder.append(String.format(format, values.get(i), values.get(i + 1)));
-    }
-    builder.append("}");
-    return builder.toString();
-  }
-
-  private String toArray(List<String> values) {
-    StringBuilder builder = new StringBuilder();
-    builder.append("[\n");
-    for (int i = 0; i < values.size(); i++) {
-      String format;
-      if (i == values.size() - 1) {
-        format = "%s\n";
-      } else {
-        format = "%s,\n";
-      }
-      builder.append(String.format(format, values.get(i)));
-    }
-    builder.append("]");
-    return builder.toString();
-  }
-
   public void write(
       Map<Character, Map<Attribute, Number>> charactersToAttributes,
       Map<Character, List<Animation>> charactersToAnimations) throws IOException {
-    BufferedWriter writer;
+    ObjectMapper objectMapper = new ObjectMapper();
 
-    writer = Files.newBufferedWriter(Paths.get("json/characters.json"));
+    objectMapper.writeValue(new File("json/characters.json"),
+        Arrays.stream(Character.values())
+          .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
+    objectMapper.writeValue(new File("json/attributes.json"),
+        Arrays.stream(Attribute.values())
+          .collect(Collectors.toMap(
+              attribute -> attribute.name(),
+              attribute -> ImmutableMap.of(
+                "fullName", attribute.fullName,
+                "viewCategory", attribute.viewCategory.name()))));
+    objectMapper.writeValue(new File("json/character_attributes.json"), charactersToAttributes);
+    objectMapper.writeValue(new File("json/animations.json"), charactersToAnimations);
+
+    /*writer = Files.newBufferedWriter(Paths.get("json/characters.json"));
     writer.write(toObject(Arrays.stream(Character.values())
           .flatMap(character -> Stream.of(character.name(), "\"" + character.fullName + "\""))
           .collect(Collectors.toList())));
@@ -71,9 +46,9 @@ public class JSONWriter {
               toObject(
                 "fullName", "\"" + attribute.fullName + "\"",
                 "viewCategory", "\"" + attribute.viewCategory.name() + "\"")))
-          .collect(Collectors.toList())));
+          .collect(Collectors.toList())));*/
 
-    writer = Files.newBufferedWriter(Paths.get("json/character_attributes.json"));
+    //writer = Files.newBufferedWriter(Paths.get("json/character_attributes.json"));
     /*writer.write(toObject(charactersToAttributes.entrySet().stream()
           .flatMap(characterAndAttributes -> Stream.of(
               characterAndAttributes.getKey().name(),
@@ -83,7 +58,7 @@ public class JSONWriter {
                     attributeToNumber.getValue().toString()))
                 .collect(Collectors.toList()))))
           .collect(Collectors.toList())));*/
-    List<String> characterAttributes = new LinkedList<>();
+    /*List<String> characterAttributes = new LinkedList<>();
     for (Map.Entry<Character, Map<Attribute, Number>> characterAndAttributes : charactersToAttributes.entrySet()) {
       List<String> attributes = new LinkedList<>();
       for (Map.Entry<Attribute, Number> attributeAndValue : characterAndAttributes.getValue().entrySet()) {
@@ -95,9 +70,9 @@ public class JSONWriter {
             characterAndAttributes.getKey().name(),
             toObject(attributes)));
     }
-    writer.write(toObject(characterAttributes));
+    writer.write(toObject(characterAttributes));*/
 
-    writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
+    /*writer = Files.newBufferedWriter(Paths.get("json/animations.json"));
     writer.write(toObject(charactersToAnimations.entrySet().stream()
           .flatMap(characterAndAnimations -> Stream.of(
               characterAndAnimations.getKey().name(),
@@ -138,6 +113,6 @@ public class JSONWriter {
                   .collect(Collectors.toList()))))
           .collect(Collectors.toList())));
 
-    writer = Files.newBufferedWriter(Paths.get("json/animation_command_types.json"));
+    writer = Files.newBufferedWriter(Paths.get("json/animation_command_types.json"));*/
   }
 }

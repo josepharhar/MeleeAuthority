@@ -3,10 +3,11 @@ var ButtonList = require('./ButtonList');
 
 var CharactersListLayout = React.createClass({
   render: function() {
-    var buttons = this.props.characters.map(function(character) {
+    var characters = this.props.characters;
+    var buttons = Object.keys(characters).map(function(charId) {
       return {
-        name: character.fullName,
-        link: '/characters/' + character.id
+        name: characters[charId],
+        link: '/characters/' + charId
       };
     });
 

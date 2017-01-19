@@ -29,12 +29,13 @@ var CharacterAttributes = React.createClass({
 
 var CharacterLayout = React.createClass({
   render: function() {
-    var charId = this.props.character.id;
+    var charId = this.props.charId;
     var buttons = this.props.animations.map(function(animation) {
-      // TODO (no description) should not be considered here, in java or something instead
-      if (animation.description != '(No Description)') {
+      // TODO send all of these to the webpage and let it be filtered there instead
+      console.log('viewCategory: ' + animation.description.viewCategory);
+      if (animation.description.viewCategory == 'BASIC') {
         return {
-          name: animation.description,
+          name: animation.description.description,
           link: '/characters/' + charId + '/' + animation.internalName
         };
       }

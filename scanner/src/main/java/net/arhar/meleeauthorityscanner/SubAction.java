@@ -25,6 +25,8 @@ import static net.arhar.meleeauthorityscanner.Character.Sk;
 import static net.arhar.meleeauthorityscanner.Character.Ss;
 import static net.arhar.meleeauthorityscanner.Character.Ys;
 import static net.arhar.meleeauthorityscanner.Character.Zd;
+import static net.arhar.meleeauthorityscanner.SubAction.SubActionCategory.*;
+import static net.arhar.meleeauthorityscanner.ViewCategory.*;
 
 import java.util.Map;
 
@@ -56,21 +58,21 @@ public class SubAction {
     .put(0x032, new SubAction("Rapid Jab Loop"))
     .put(0x033, new SubAction("Rapid Jab End"))
     .put(0x034, new SubAction("Dash Attack"))
-    .put(0x035, new SubAction("Forward-Tilt (High)"))
-    .put(0x037, new SubAction("Forward-Tilt"))
-    .put(0x039, new SubAction("Forward-Tilt (Low)"))
-    .put(0x03A, new SubAction("Up-Tilt"))
-    .put(0x03B, new SubAction("Down-Tilt"))
-    .put(0x03C, new SubAction("Forward-Smash (High)"))
-    .put(0x03E, new SubAction("Forward-Smash"))
-    .put(0x040, new SubAction("Forward-Smash (Low)"))
-    .put(0x042, new SubAction("Up-Smash"))
-    .put(0x043, new SubAction("Down-Smash"))
-    .put(0x044, new SubAction("Neutral-Air"))
-    .put(0x045, new SubAction("Forward-Air"))
-    .put(0x046, new SubAction("Back-Air"))
-    .put(0x047, new SubAction("Up-Air"))
-    .put(0x048, new SubAction("Down-Air"))
+    .put(0x035, new SubAction("Forward-Tilt (High)", Tilt, BASIC))
+    .put(0x037, new SubAction("Forward-Tilt", Tilt, BASIC))
+    .put(0x039, new SubAction("Forward-Tilt (Low)", Tilt, BASIC))
+    .put(0x03A, new SubAction("Up-Tilt", Tilt, BASIC))
+    .put(0x03B, new SubAction("Down-Tilt", Tilt, BASIC))
+    .put(0x03C, new SubAction("Forward-Smash (High)", Smash, BASIC))
+    .put(0x03E, new SubAction("Forward-Smash", Smash, BASIC))
+    .put(0x040, new SubAction("Forward-Smash (Low)", Smash, BASIC))
+    .put(0x042, new SubAction("Up-Smash", Smash, BASIC))
+    .put(0x043, new SubAction("Down-Smash", Smash, BASIC))
+    .put(0x044, new SubAction("Neutral-Air", Aerial, BASIC))
+    .put(0x045, new SubAction("Forward-Air", Aerial, BASIC))
+    .put(0x046, new SubAction("Back-Air", Aerial, BASIC))
+    .put(0x047, new SubAction("Up-Air", Aerial, BASIC))
+    .put(0x048, new SubAction("Down-Air", Aerial, BASIC))
     .put(0x049, new SubAction("Nair Landing Lag"))
     .put(0x04A, new SubAction("Fair Landing Lag"))
     .put(0x04B, new SubAction("Bair Landing Lag"))
@@ -765,6 +767,6 @@ public class SubAction {
   }
 
   public static enum SubActionCategory {
-    Tilt, Smash, Throw, Item, Special, Movement, Other
+    Tilt, Aerial, Smash, Throw, Item, Special, Movement, Other
   }
 }

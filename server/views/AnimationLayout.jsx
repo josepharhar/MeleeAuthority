@@ -120,8 +120,15 @@ class FrameStripTable extends React.Component {
 
 class AnimationLayout extends React.Component {
   render() {
-    console.log('animation: ' + JSON.stringify(this.props.animation));
-    var title = this.props.character.fullName + ' - ' + this.props.animation.description;
+    var animation = this.props.animation;
+    console.log('animation: ' + Object.keys(animation));
+    var title = this.props.character + ' - ' + animation.description.description;
+
+    var hitboxTables = Object.keys(animation.frameToHitboxes).map(function(frame) {
+      // TODO decide what to do with multiple hitbox groups, like color each differently
+      return <HitboxesTable hitboxes={animation.frameToHitboxes[frame]}/>;
+    });
+
     return (
       <html>
         <head>
@@ -131,9 +138,9 @@ class AnimationLayout extends React.Component {
         <body>
           <h1>{title}</h1>
           <h2>Hitboxes</h2>
-          <HitboxesTable hitboxes={this.props.hitboxes}/>
+          {hitboxTables}
           <h2>Frame Strip</h2>
-          <FrameStripTable frameStrip={this.props.frameStrip}/>
+          <FrameStripTable frameStrip={animation.frameStrip}/>
           <BodyScripts />
         </body>
       </html>

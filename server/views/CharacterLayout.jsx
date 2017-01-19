@@ -7,11 +7,15 @@ var CharacterAttributes = React.createClass({
   render: function() {
     var properties = [];
     for (var key in this.props.attributes) {
-      var value = this.props.attributes[key];
-      properties.push({
-        name: key,
-        value: value
-      });
+      var attributeDefinition = this.props.attribute_definitions[key];
+      // TODO BASIC
+      if (attributeDefinition.viewCategory == 'BASIC') {
+        var value = this.props.attributes[key];
+        properties.push({
+          name: attributeDefinition.fullName,
+          value: value
+        });
+      }
     }
 
     var rows = properties.map(function(row) {
@@ -23,7 +27,7 @@ var CharacterAttributes = React.createClass({
       );
     });
 
-    return <table><tbody>{rows}</tbody></table>;
+    return <table className="table table-hover table-bordered"><tbody>{rows}</tbody></table>;
   }
 });
 
@@ -44,12 +48,14 @@ var CharacterLayout = React.createClass({
     return (
       <html>
         <head>
-          <title>{this.props.character.fullName}</title>
+          <title>{this.props.character}</title>
           <HeadScripts />
         </head>
         <body>
-          <h1>{this.props.character.fullName}</h1>
-          <CharacterAttributes attributes={this.props.attributes}/>
+          <h1>{this.props.character}</h1>
+          <CharacterAttributes
+            attributes={this.props.attributes}
+            attribute_definitions={this.props.attribute_definitions}/>
           <ButtonList buttons={buttons}/>
           <BodyScripts />
         </body>

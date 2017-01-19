@@ -24,7 +24,7 @@ public enum Attribute {
   SHVInitVel("Shorthop V Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   AirJMult("Air Jump Multiplier", Float.class, ViewCategory.ADVANCED, null),
   DblJMult("Double Jump Momentum", Float.class, ViewCategory.ADVANCED, null),
-  NumJumps("Number of Jumps", Integer.class, ViewCategory.BASIC, null),
+  NumJumps("Number of Jumps", Float.class, ViewCategory.BASIC, null),
   Gravity("Gravity", Float.class, ViewCategory.BASIC, null),
   TermVel("Terminal Velocity", Float.class, ViewCategory.BASIC, null),
   AirMobA("Air Mobility A", Float.class, ViewCategory.ADVANCED, null),

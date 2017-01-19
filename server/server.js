@@ -3,8 +3,8 @@ var reactViews = require('express-react-views');
 var morgan = require('morgan');
 
 var characters = require('./json/characters.json');
-var attribute = require('./json/attributes.json');
-var character_attributes = require('./json/character_attributes.json');
+var attribute_definitions = require('./json/attributes.json');
+var attributes = require('./json/character_attributes.json');
 var animations = require('./json/animations.json');
 
 var app = express();
@@ -36,8 +36,9 @@ app.get('/characters/:charId', function(req, res) {
   res.render('CharacterLayout', {
     charId: charId,
     character: characters[charId],
-    attributes: character_attributes[charId],
-    animations: animations[charId]
+    attributes: attributes[charId],
+    animations: animations[charId],
+    attribute_definitions: attribute_definitions
   });
 });
 
@@ -61,7 +62,7 @@ app.get('/characters/:charId/:animation', function(req, res) {
   var animation = findAnimation(animations[charId], req.params.animation);
   if (animation == null) {
     // TODO return 404
-    console.log('could not find animation "' + req.params.animation + '"');
+    console.log('could not find animation "' + req.params.animation + '" for character "' + charId + '"');
     return;
   }
 

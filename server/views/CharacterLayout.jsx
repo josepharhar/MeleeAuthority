@@ -21,13 +21,14 @@ var CharacterAttributes = React.createClass({
     var rows = properties.map(function(row) {
       return (
         <tr>
-          <td>{row.name}</td>
+          <th>{row.name}</th>
           <td>{row.value}</td>
         </tr>
       );
     });
 
-    return <table className="table table-hover table-bordered"><tbody>{rows}</tbody></table>;
+    return <table className="attribute-table table table-hover table-bordered"><tbody>{rows}</tbody></table>;
+    //return <table className="attribute-table"><tbody>{rows}</tbody></table>;
   }
 });
 
@@ -36,7 +37,6 @@ var CharacterLayout = React.createClass({
     var charId = this.props.charId;
     var buttons = this.props.animations.map(function(animation) {
       // TODO send all of these to the webpage and let it be filtered there instead
-      console.log('viewCategory: ' + animation.description.viewCategory);
       if (animation.description.viewCategory == 'BASIC') {
         return {
           name: animation.description.description,
@@ -53,9 +53,11 @@ var CharacterLayout = React.createClass({
         </head>
         <body>
           <h1>{this.props.character}</h1>
+          <h2>Attributes</h2>
           <CharacterAttributes
             attributes={this.props.attributes}
             attribute_definitions={this.props.attribute_definitions}/>
+          <h2>Moves</h2>
           <ButtonList buttons={buttons}/>
           <BodyScripts />
         </body>

@@ -43,7 +43,7 @@ class HitboxesTable extends React.Component {
     });
 
     return (
-      <table className="table table-hover table-bordered">
+      <table className="attribute-table table table-hover table-bordered">
         <thead><tr>{tableHead}</tr></thead>
         <tbody>{tableBody}</tbody>
       </table>
@@ -53,21 +53,6 @@ class HitboxesTable extends React.Component {
 
 class FrameStripTable extends React.Component {
   render() {
-    var frameStripStyle = {
-      'width': '16px',
-      'height': '16px'
-    };
-    var frameStripHeaderStyle = {
-      'height': '16px'
-    };
-    var frameStripStyleTrue = {
-      'background-color': 'red'
-    };
-    Object.assign(frameStripStyleTrue, frameStripStyle);
-    var frameStripStyleFalse = {
-    };
-    Object.assign(frameStripStyleFalse, frameStripStyle);
-
     var frameStrip = this.props.frameStrip;
     // turn columns into rows
     var keys = getKeys(frameStrip);
@@ -81,37 +66,22 @@ class FrameStripTable extends React.Component {
       var rofl = row.map(function(entry) {
         if (key == 'Frame') {
           // TODO there should be a better way to do this
-          return (
-            <th style={frameStripStyle}>{entry}</th>
-          );
+          return <th>{entry}</th>;
         }
         if (entry == '1') {
-          return <td style={frameStripStyleTrue}></td>
+          return <td className="frame-strip-true"></td>;
         }
         if (entry == '0') {
-          return <td style={frameStripStyleFalse}></td>
+          return <td></td>;
         }
-        return <td style={frameStripStyle}>{entry}</td>;
+        // this should never happen? or is this for frame numbers?
+        return <td>{entry}</td>;
       });
-      return (
-        <tr>
-          <th style={frameStripHeaderStyle}>{key}</th>
-          {rofl}
-        </tr>
-      );
+      return <tr><th>{key}</th>{rofl}</tr>;
     });
 
-    var style = {
-      'font-size': '12px',
-      'cellpadding': '0',
-      'cellspacing': '0',
-      'padding': '0',
-      'margin': '0',
-      'border-collapse': 'collapse',
-      'width': 'auto'
-    };
     return (
-      <table className="table table-hover table-bordered" style={style}>
+      <table className="frame-strip table table-hover table-bordered">
         <tbody>{asdf}</tbody>
       </table>
     );

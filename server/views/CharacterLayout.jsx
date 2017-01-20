@@ -28,7 +28,6 @@ var CharacterAttributes = React.createClass({
     });
 
     return <table className="attribute-table table table-hover table-bordered"><tbody>{rows}</tbody></table>;
-    //return <table className="attribute-table"><tbody>{rows}</tbody></table>;
   }
 });
 

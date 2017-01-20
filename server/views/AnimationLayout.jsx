@@ -54,10 +54,7 @@ class HitboxesTable extends React.Component {
 class FrameStripTable extends React.Component {
   render() {
     var frameStrip = this.props.frameStrip;
-    // turn columns into rows
-    var keys = getKeys(frameStrip);
-
-    var asdf = keys.map(function(key) {
+    var rows = getKeys(frameStrip).map(function(key) {
       // for each key, create a row
       var row = [];
       for (var i = 0; i < frameStrip.length; i++) {
@@ -82,7 +79,34 @@ class FrameStripTable extends React.Component {
 
     return (
       <table className="frame-strip table table-hover table-bordered">
-        <tbody>{asdf}</tbody>
+        <tbody>{rows}</tbody>
+      </table>
+    );
+  }
+}
+
+class AnimationCommandsTable extends React.Component {
+  render() {
+    // TODO this is the same as attribute table, put in common component
+
+    var commands = this.props.commands;
+
+    var properties = Object.keys(commands[0]);
+    var rows = Object.keys(commands).map(function(key) {
+      var row = properties.map(function(property) {
+        return <td>{commands[key][property]}</td>;
+      });
+      return <tr>{row}</tr>;
+    });
+
+    var propertiesRow = properties.map(function(property) {
+      return <th>{property}</th>;
+    });
+
+    return (
+      <table className="attribute-table table table-hover table-bordered">
+        <thead>{propertiesRow}</thead>
+        <tbody>{rows}</tbody>
       </table>
     );
   }
@@ -111,6 +135,8 @@ class AnimationLayout extends React.Component {
           {hitboxTables}
           <h2>Frame Strip</h2>
           <FrameStripTable frameStrip={animation.frameStrip}/>
+          <h2>Animation Commands</h2>
+          <AnimationCommandsTable commands={animation.commands}/>
           <BodyScripts />
         </body>
       </html>

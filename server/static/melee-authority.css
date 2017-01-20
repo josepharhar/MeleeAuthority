@@ -1,5 +1,5 @@
 .attribute-table {
-  width: initial;
+  width: auto;
 }
 
 .attribute-table td {
@@ -8,25 +8,22 @@
 
 .frame-strip {
   font-size: 12px;
-  cellpadding: 0;
-  cellspacing: 0;
-  padding: 0;
-  margin: 0;
-  border-collapse: collapse;
   width: auto;
 }
 
-.frame-strip {
-  width: 16px;
-  height: 16px;
+.frame-strip tbody tr th {
+  padding: 0px;
+  padding-left: 8px;
+  padding-right: 8px;
+  vertical-align: middle;
 }
 
-.frame-strip th {
-  height: 16px;
-}
-
-.frame-strip td {
-
+.frame-strip tbody tr td {
+  min-width: 30px;
+  min-height: 30px;
+  width: 30px;
+  height: 30px;
+  padding: 0px;
 }
 
 .frame-strip-true {

@@ -9,6 +9,8 @@ import java.util.TreeMap;
 
 public class DatReader {
 
+  private static final boolean DEBUG = true;
+
   private static final int DATA_OFFSET = 0x20;
 
   public static Map<Character, List<Animation>> readAllAnimations(MeleeImageFileSystem fileSystem) {
@@ -30,8 +32,10 @@ public class DatReader {
 
       for (int i = 0; i < ftDataHeader.getNumSubActions(); i++) {
         SubActionHeader motherCommand = new SubActionHeader(pldat, ftDataHeader, i);
-        System.out.printf("id: %03X  ", i);
-        System.out.println(motherCommand);
+        if (DEBUG) {
+          System.out.printf("id: %03X  ", i);
+          System.out.println(motherCommand);
+        }
         if (motherCommand.isSubActionNull(pldat)) {
           // this character does not implement this SubAction, so skip it
           // TODO maybe have null entries instead or some indication that this existed?
@@ -56,16 +60,19 @@ public class DatReader {
       charactersToAnimations.put(character, animations);
     }
 
-    System.out.println();
-    subactionToNameCounts.forEach(
-        (id, nameCounts) -> {
-          System.out.printf("0x%03X\n", id);
-          nameCounts.forEach(
-              (string, count) -> {
-                System.out.printf("    \"%s\": %d\n", string, count);
-              });
-        });
-    System.out.println();
+    if (DEBUG) {
+      System.out.println();
+      System.out.println("SubAction number to internal name:");
+      subactionToNameCounts.forEach(
+          (id, nameCounts) -> {
+            System.out.printf("0x%03X\n", id);
+            nameCounts.forEach(
+                (string, count) -> {
+                  System.out.printf("    \"%s\": %d\n", string, count);
+                });
+          });
+      System.out.println();
+    }
 
     return charactersToAnimations;
   }

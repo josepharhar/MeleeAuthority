@@ -5,7 +5,7 @@ var HeadScripts = React.createClass({
     //return <link rel="stylesheet" href="/static/bootstrap-cyborg.min.css" />;
     return (
       <div>
-        <link rel="stylesheet" href="/static/bootstrap.min.css" />
+        <link rel="stylesheet" href="/static/bootstrap-cyborg.min.css" />
         <link rel="stylesheet" href="/static/melee-authority.css" />
       </div>
     );

@@ -29,3 +29,7 @@
 .frame-strip-true {
   background-color: red;
 }
+
+.link-button {
+  margin: 5px
+}

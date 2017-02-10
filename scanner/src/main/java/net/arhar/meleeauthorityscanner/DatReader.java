@@ -88,10 +88,6 @@ public class DatReader {
       // for now, just use the offsets that we already have
       pldat.position(ftDataHeader.attributesStart);
       for (Attribute attribute : Attribute.values()) {
-        /*if (!attribute.known) {
-          // skip this one
-          pldat.getInt();
-        } else if (attribute.numberType == Integer.class) {*/
         if (attribute.numberType == Integer.class) {
           attributes.put(attribute, pldat.getInt());
         } else if (attribute.numberType == Float.class) {

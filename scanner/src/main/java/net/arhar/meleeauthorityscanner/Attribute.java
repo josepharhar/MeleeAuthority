@@ -16,7 +16,7 @@ public enum Attribute {
   RunAnimScal("Run Animation Scaling", Float.class, ViewCategory.ADVANCED, null),
   RunAccel("Run Acceleration?", Float.class, ViewCategory.ADVANCED, null), // unknown
   Unknown14(Attribute.UNKNOWN, Float.class, ViewCategory.UNKNOWN, null), // unknown
-  JumpFrames("Jump Startup Lag (Frames)", Float.class, ViewCategory.BASIC, null),
+  JumpFrames("Jump Squat", Integer.class, ViewCategory.BASIC, null), // TODO can i link to ssbwiki here?
   JumpHInitVel("Jump H Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   JumpVInitVel("Jump V Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   JumpMomentMult("Ground to Air Jump Momentum Multiplier", Float.class, ViewCategory.ADVANCED, null),
@@ -60,11 +60,11 @@ public enum Attribute {
   Unknown56(Attribute.UNKNOWN, Integer.class, ViewCategory.UNKNOWN, null), // unknown
   StarDmg("Kirby Neutral+B Star Damage", Float.class, ViewCategory.ADVANCED, null),
   ALag("Normal Landing Lag", Float.class, ViewCategory.BASIC, null),
-  NLag("N-Air Landing Lag", Float.class, ViewCategory.BASIC, null),
-  FLag("F-Air Landing Lag", Float.class, ViewCategory.BASIC, null),
-  BLag("B-Air Landing Lag", Float.class, ViewCategory.BASIC, null),
-  ULag("U-Air Landing Lag", Float.class, ViewCategory.BASIC, null),
-  DLag("D-Air Landing Lag", Float.class, ViewCategory.BASIC, null),
+  NLag("Nair Landing Lag", Float.class, ViewCategory.BASIC, null),
+  FLag("Fair Landing Lag", Float.class, ViewCategory.BASIC, null),
+  BLag("Bair Landing Lag", Float.class, ViewCategory.BASIC, null),
+  ULag("Uair Landing Lag", Float.class, ViewCategory.BASIC, null),
+  DLag("Dair Landing Lag", Float.class, ViewCategory.BASIC, null),
   VMdlScaling("Victory Screen Window Model Scaling", Float.class, ViewCategory.ADVANCED, null),
   Unknown65(Attribute.UNKNOWN, Integer.class, ViewCategory.UNKNOWN, null), // unknown
   WJmpHVel("WallJump H Velocity", Float.class, ViewCategory.ADVANCED, null),

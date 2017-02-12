@@ -16,7 +16,7 @@ public enum Attribute {
   RunAnimScal("Run Animation Scaling", Float.class, ViewCategory.ADVANCED, null),
   RunAccel("Run Acceleration?", Float.class, ViewCategory.ADVANCED, null), // unknown
   Unknown14(Attribute.UNKNOWN, Float.class, ViewCategory.UNKNOWN, null), // unknown
-  JumpSquat("Jump Squat Frames", Integer.class, ViewCategory.BASIC, null), // TODO can i link to ssbwiki here?
+  JumpSquat("Jump Squat Frames", Float.class, ViewCategory.BASIC, null), // TODO can i link to ssbwiki here?
   JumpHInitVel("Jump H Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   JumpVInitVel("Jump V Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   JumpMomentMult("Ground to Air Jump Momentum Multiplier", Float.class, ViewCategory.ADVANCED, null),
@@ -24,7 +24,7 @@ public enum Attribute {
   SHVInitVel("Shorthop V Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   AirJMult("Air Jump Multiplier", Float.class, ViewCategory.ADVANCED, null),
   DblJMult("Double Jump Momentum", Float.class, ViewCategory.ADVANCED, null),
-  NumJumps("Number of Jumps", Float.class, ViewCategory.BASIC, null),
+  NumJumps("Number of Jumps", Integer.class, ViewCategory.BASIC, null),
   Gravity("Gravity", Float.class, ViewCategory.BASIC, null),
   TermVel("Terminal Velocity", Float.class, ViewCategory.BASIC, null),
   AirMobA("Air Mobility A", Float.class, ViewCategory.ADVANCED, null),

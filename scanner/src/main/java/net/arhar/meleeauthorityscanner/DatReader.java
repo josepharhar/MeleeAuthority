@@ -9,7 +9,7 @@ import java.util.TreeMap;
 
 public class DatReader {
 
-  private static final boolean DEBUG = true;
+  private static final boolean DEBUG = false;
 
   private static final int DATA_OFFSET = 0x20;
 
@@ -93,7 +93,9 @@ public class DatReader {
       // TODO make this actually read all the attributes, use attributesEnd
       // TODO also read "special move attributes"
       // for now, just use the offsets that we already have
-      pldat.position(ftDataHeader.attributesStart);
+      //pldat.position(ftDataHeader.attributesStart);
+      pldat.position(ftDataHeader.getAttributesStart());
+      System.out.printf("%s attribute start: %08X\n", character.name(), ftDataHeader.attributesStart);
       for (Attribute attribute : Attribute.values()) {
         if (attribute.numberType == Integer.class) {
           attributes.put(attribute, pldat.getInt());

@@ -15,7 +15,7 @@ app.engine('jsx', reactViews.createEngine());
 app.use('/static', express.static('static'));
 
 app.get('/', function(req, res) {
-  res.redirect('/characters');
+  res.render('HomeLayout');
 });
 
 app.get('/characters', function(req, res) {

@@ -1,5 +1,8 @@
 var crawler = require('crawler');
 var util = require('util');
+var fs = require('fs');
+var mkdirp = require('mkdirp');
+var path = require('path');
 
 var queuedLinks = {};
 
@@ -10,9 +13,25 @@ var c = new crawler({
     if (error) {
       console.error(error);
     } else {
+      var filepath = __dirname + res.request.uri.path;
+      console.log(res.request.uri.href + ' "' + res.$('title').text() + '" -> ' + filepath);
+      mkdirp(path.dirname(filepath), function(err) {
+        if (err) {
+          console.error('mkdirp error: ' + err);
+        } else {
+          fs.writeFile(filepath, res.body, function(err) {
+            if (err) {
+              console.error('fs.writeFile error: ' + err);
+            } else {
+              console.log('file ' + filepath + ' was saved');
+            }
+          });
+        }
+      });
+
       // TODO use res.request.uri.protocol instead of http:
       var address = 'http://' + res.request.uri.host;
-      console.log(res.request.uri.href + ' -> ' + res.$('title').text());
+
       res.$('a').each(function() {
         var link = address + this.attribs.href;
         console.log('target link: ' + link);

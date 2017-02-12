@@ -4,6 +4,7 @@ var fs = require('fs');
 var mkdirp = require('mkdirp');
 var path = require('path');
 
+var outputDirectory = __dirname + '/build';
 var queuedLinks = {};
 
 var c = new crawler({
@@ -13,7 +14,7 @@ var c = new crawler({
     if (error) {
       console.error(error);
     } else {
-      var filepath = __dirname + res.request.uri.path + '/index.html';
+      var filepath = outputDirectory + res.request.uri.path + '/index.html';
       console.log(res.request.uri.href + ' "' + res.$('title').text() + '" -> ' + filepath);
       mkdirp(path.dirname(filepath), function(err) {
         if (err) {

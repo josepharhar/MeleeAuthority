@@ -45,6 +45,7 @@ public class Hitbox {
     xoffset = getBits(data, 80, 95, true);
 
     // angle 96-104
+    // TODO is angle actually signed?
     angle = getBits(data, 96, 104, false);
 
     // knockback scaling 105-113

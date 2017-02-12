@@ -2,6 +2,7 @@ package net.arhar.meleeauthorityscanner;
 
 import java.util.Arrays;
 
+// http://opensa.dantarion.com/wiki/Events_(Melee)
 public enum AnimationCommandType {
   HITBOX(0x2C, 0x14, "Hitbox"),
   THROW(0x88, 0xC, "Throw"),

@@ -130,13 +130,15 @@ class AnimationLayout extends React.Component {
           <HeadScripts />
         </head>
         <body>
-          <h1>{title}</h1>
-          <h2>Hitboxes</h2>
-          {hitboxTables}
-          <h2>Frame Strip</h2>
-          <FrameStripTable frameStrip={animation.frameStrip}/>
-          <h2>Animation Commands</h2>
-          <AnimationCommandsTable commands={animation.commands}/>
+          <div className="container">
+            <h1>{title}</h1>
+            <h2>Hitboxes</h2>
+            {hitboxTables}
+            <h2>Frame Strip</h2>
+            <FrameStripTable frameStrip={animation.frameStrip}/>
+            <h2>Animation Commands</h2>
+            <AnimationCommandsTable commands={animation.commands}/>
+          </div>
           <BodyScripts />
         </body>
       </html>

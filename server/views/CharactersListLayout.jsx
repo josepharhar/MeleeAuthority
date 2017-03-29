@@ -20,7 +20,9 @@ var CharactersListLayout = React.createClass({
           <HeadScripts />
         </head>
         <body>
-          <ButtonList buttons={buttons}/>
+          <div className="container">
+            <ButtonList buttons={buttons}/>
+          </div>
           <BodyScripts />
         </body>
       </html>

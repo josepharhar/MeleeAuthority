@@ -51,13 +51,21 @@ var CharacterLayout = React.createClass({
           <HeadScripts />
         </head>
         <body>
-          <h1>{this.props.character}</h1>
-          <h2>Attributes</h2>
-          <CharacterAttributes
-            attributes={this.props.attributes}
-            attribute_definitions={this.props.attribute_definitions}/>
-          <h2>Moves</h2>
-          <ButtonList buttons={buttons}/>
+          <div className="container">
+            <h1>{this.props.character}</h1>
+            <div className="flex-container">
+              <div className="flex-item">
+                <h2>Attributes</h2>
+                <CharacterAttributes
+                  attributes={this.props.attributes}
+                  attribute_definitions={this.props.attribute_definitions}/>
+              </div>
+              <div className="flex-item">
+                <h2>Moves</h2>
+                <ButtonList buttons={buttons}/>
+              </div>
+            </div>
+          </div>
           <BodyScripts />
         </body>
       </html>

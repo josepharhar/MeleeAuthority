@@ -33,3 +33,20 @@
 .link-button {
   margin: 5px
 }
+
+@media (min-width: 48em) {
+  .container {
+    max-width: 100rem;
+  }
+}
+
+.flex-container {
+  display: flex;
+}
+
+.flex-item {
+  margin: 7px;
+  padding-left: 20px;
+  padding-right: 20px;
+  background-image: linear-gradient(rgba(156, 39, 176, 0.2), black);
+}

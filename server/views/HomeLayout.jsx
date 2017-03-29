@@ -19,8 +19,10 @@ var HomeLayout = React.createClass({
           <HeadScripts />
         </head>
         <body>
-          <h1>Melee Authority</h1>
-          <ButtonList buttons={buttons}/>
+          <div className="container">
+            <h1>Melee Authority</h1>
+            <ButtonList buttons={buttons}/>
+          </div>
           <BodyScripts />
         </body>
       </html>

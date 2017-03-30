@@ -10,9 +10,12 @@ cd build
 git init
 git add .
 git commit -m "gh-pages"
-git remote add origin git@github.com:josepharhar/meleeauthority
-git branch gh-pages
-git push -f origin gh-pages
+#git remote add origin git@github.com:josepharhar/meleeauthority
+#git branch gh-pages
+#git push -f origin gh-pages
+git remote add origin git@github.com:josepharhar/josepharhar.github.io
+#git branch master
+git push -f origin master
 cd ..
 
 # clean files

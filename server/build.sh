@@ -3,7 +3,7 @@
 # generate files
 mkdir -p build
 npm run scrape
-cp -r static/* build
+cp -r static build
 
 # push files
 cd build

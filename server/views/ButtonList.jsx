@@ -8,7 +8,7 @@ var ButtonList = React.createClass({
       );
     });
 
-    return <div>{buttons}</div>;
+    return <div className="button-list">{buttons}</div>;
   }
 });
 

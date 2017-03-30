@@ -42,11 +42,17 @@
 
 .flex-container {
   display: flex;
+  flex-wrap: wrap;
 }
 
 .flex-item {
   margin: 7px;
   padding-left: 20px;
   padding-right: 20px;
-  background-image: linear-gradient(rgba(156, 39, 176, 0.2), black);
+  background-image: linear-gradient(rgba(156, 39, 176, 0.2), rgba(0, 0, 0, 0));
+}
+
+.button-list {
+  display: inline-flex;
+  flex-direction: column;
 }

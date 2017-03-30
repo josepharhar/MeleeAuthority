@@ -54,6 +54,9 @@ class HitboxesTable extends React.Component {
 class FrameStripTable extends React.Component {
   render() {
     var frameStrip = this.props.frameStrip;
+  
+    var tables = [];
+
     var rows = getKeys(frameStrip).map(function(key) {
       // for each key, create a row
       var row = [];
@@ -78,9 +81,10 @@ class FrameStripTable extends React.Component {
     });
 
     return (
-      <table className="frame-strip table table-hover table-bordered">
-        <tbody>{rows}</tbody>
-      </table>
+      <div>{tables}</div>
+        /*<table className="frame-strip table table-hover table-bordered">
+          <tbody>{rows}</tbody>
+        </table>*/
     );
   }
 }
@@ -132,12 +136,20 @@ class AnimationLayout extends React.Component {
         <body>
           <div className="container">
             <h1>{title}</h1>
-            <h2>Hitboxes</h2>
-            {hitboxTables}
-            <h2>Frame Strip</h2>
-            <FrameStripTable frameStrip={animation.frameStrip}/>
-            <h2>Animation Commands</h2>
-            <AnimationCommandsTable commands={animation.commands}/>
+            <div className="flex-container">
+              <div className="flex-item">
+                <h2>Hitboxes</h2>
+                {hitboxTables}
+              </div>
+              <div className="flex-item">
+                <h2>Frame Strip</h2>
+                <FrameStripTable frameStrip={animation.frameStrip}/>
+              </div>
+              <div className="flex-item">
+                <h2>Animation Commands</h2>
+                <AnimationCommandsTable commands={animation.commands}/>
+              </div>
+            </div>
           </div>
           <BodyScripts />
         </body>

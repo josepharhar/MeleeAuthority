@@ -72,7 +72,7 @@ public class Animation {
     int waitFrames = 0;
     int currentFrame = 1; // start frame numbering at 1 instead of 0
     int totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
-    int loopsRemaining = 0, loopIndex = 0;
+    int loopsRemaining = -1, loopIndex = -1;
     frameLoop:
     while (commandIndex < commands.size()
         || waitFrames > 0
@@ -101,9 +101,12 @@ public class Animation {
             waitFrames = command.data[3] & 0xFF;
             break;
           case HITBOX:
-            // add the hitbox
-            frameToHitboxes.putIfAbsent(currentFrame, new ArrayList<>());
-            frameToHitboxes.get(currentFrame).add(new Hitbox(command.data));
+            // TODO this is a hack to prevent duplicating hitbox info in loops
+            if (loopsRemaining < 1) {
+              // add the hitbox
+              frameToHitboxes.putIfAbsent(currentFrame, new ArrayList<>());
+              frameToHitboxes.get(currentFrame).add(new Hitbox(command.data));
+            }
             hitbox = true;
             break;
           case IASA:
@@ -130,8 +133,8 @@ public class Animation {
             hitbox = false;
             break;
           case SET_LOOP:
-            loopsRemaining = command.data[3] & 0xFF;
-            loopIndex = commandIndex + 1;
+            loopsRemaining = (command.data[3] & 0xFF) - 1;
+            loopIndex = commandIndex;
             break;
           case EXEC_LOOP:
             if (loopsRemaining > 0) {

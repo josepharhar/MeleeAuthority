@@ -68,18 +68,20 @@ public class Animation {
     boolean iasa = false;
     boolean hitbox = false;
     boolean autocancel = false;
-    Iterator<AnimationCommand> commandIterator = commands.iterator();
+    int commandIndex = 0;
     int waitFrames = 0;
     int currentFrame = 1; // start frame numbering at 1 instead of 0
     int totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
+    int loopsRemaining = 0, loopIndex = 0;
     frameLoop:
-    while (commandIterator.hasNext()
+    while (commandIndex < commands.size()
         || waitFrames > 0
         || currentFrame < totalFrames) { // TODO check is frameCount comparison is correct here
-      if (commandIterator.hasNext() && waitFrames == 0) {
+      if (commandIndex < commands.size() && waitFrames == 0) {
         // execute the next command because there is no wait left
-        AnimationCommand command = commandIterator.next();
+        AnimationCommand command = commands.get(commandIndex++);
         command.frame = currentFrame;
+
         switch (command.type) {
           case ASYNC_TIMER:
             // async timers: execute the next command on this frame number
@@ -94,15 +96,9 @@ public class Animation {
               // TODO investigate this more, there are aync timers for frame 0 that worked before for some reason
               waitFrames = 0;
             }
-            if (temp) {
-              System.out.println("async on frame " + currentFrame + ": " + waitFrames);
-            }
             break;
           case SYNC_TIMER:
             waitFrames = command.data[3] & 0xFF;
-            if (temp) {
-              System.out.println("sync on frame " + currentFrame + ": " + waitFrames);
-            }
             break;
           case HITBOX:
             // add the hitbox
@@ -133,10 +129,18 @@ public class Animation {
             // TODO this should specify a hitbox or something
             hitbox = false;
             break;
+          case SET_LOOP:
+            loopsRemaining = command.data[3] & 0xFF;
+            loopIndex = commandIndex + 1;
+            break;
           case EXEC_LOOP:
+            if (loopsRemaining > 0) {
+              commandIndex = loopIndex;
+              loopsRemaining--;
+            }
+            break;
           case GOTO:
           case RETURN:
-          case SET_LOOP:
           case SUBROUTINE:
             // TODO
             break frameLoop;

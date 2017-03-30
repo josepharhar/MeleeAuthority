@@ -54,38 +54,56 @@ class HitboxesTable extends React.Component {
 class FrameStripTable extends React.Component {
   render() {
     var frameStrip = this.props.frameStrip;
-  
-    var tables = [];
 
-    var rows = getKeys(frameStrip).map(function(key) {
-      // for each key, create a row
-      var row = [];
-      for (var i = 0; i < frameStrip.length; i++) {
-        row.push(frameStrip[i][key]);
+    // filter out empty rows, Frame is always needed
+    var keys = getKeys(frameStrip).filter(function(key) {
+      if (key == 'Frame') {
+        return true;
       }
-      var rofl = row.map(function(entry) {
-        if (key == 'Frame') {
-          // TODO there should be a better way to do this
-          return <th>{entry}</th>;
+      for (var i = 0; i < frameStrip.length; i++) {
+        if (frameStrip[i][key] == '1') {
+          return true;
         }
-        if (entry == '1') {
-          return <td className="frame-strip-true"></td>;
-        }
-        if (entry == '0') {
-          return <td></td>;
-        }
-        // this should never happen? or is this for frame numbers?
-        return <td>{entry}</td>;
-      });
-      return <tr><th>{key}</th>{rofl}</tr>;
+      }
+      return false;
     });
 
-    return (
-      <div>{tables}</div>
-        /*<table className="frame-strip table table-hover table-bordered">
+    var MAX_TABLE_LENGTH = 25;
+    var numTables = Math.ceil(frameStrip.length / MAX_TABLE_LENGTH);
+    var tables = [];
+
+    for (var i = 0; i < numTables; i++) {
+      // for each key, create a row
+      var rows = keys.map(function(key) {
+        var row = [];
+        for (var j = i * MAX_TABLE_LENGTH; j < frameStrip.length && j < (i + 1) * MAX_TABLE_LENGTH; j++) {
+          row.push(frameStrip[j][key]);
+        }
+
+        row = row.map(function(value) {
+          if (key == 'Frame') {
+            return <th>{value + 1}</th>;
+          } else if (value == '1') {
+            return <td className="frame-strip-true"></td>;
+          } else if (value == '0') {
+            return <td></td>;
+          } else {
+            // this should never happen
+            return <td>{value}</td>;
+          }
+        });
+
+        return <tr><th>{key}</th>{row}</tr>;
+      });
+
+      tables.push(
+        <table className="frame-strip table table-hover table-bordered">
           <tbody>{rows}</tbody>
-        </table>*/
-    );
+        </table>
+      );
+    }
+
+    return <div>{tables}</div>;
   }
 }
 
@@ -119,7 +137,6 @@ class AnimationCommandsTable extends React.Component {
 class AnimationLayout extends React.Component {
   render() {
     var animation = this.props.animation;
-    console.log('animation: ' + Object.keys(animation));
     var title = this.props.character + ' - ' + animation.description.description;
 
     var hitboxTables = Object.keys(animation.frameToHitboxes).map(function(frame) {

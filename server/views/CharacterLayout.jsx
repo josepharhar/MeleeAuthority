@@ -34,14 +34,37 @@ var CharacterAttributes = React.createClass({
 var CharacterLayout = React.createClass({
   render: function() {
     var charId = this.props.charId;
-    var buttons = this.props.animations.map(function(animation) {
+
+    var categoriesToButtons = {};
+    // TODO this is a hacky way of arbitrarily ordering the button categories
+    categoriesToButtons['Aerial'] = [];
+    categoriesToButtons['Smash'] = [];
+    categoriesToButtons['Tilt'] = [];
+    categoriesToButtons['Dodge'] = [];
+    categoriesToButtons['Tech'] = [];
+    categoriesToButtons['Ledge'] = [];
+
+    this.props.animations.forEach(function(animation) {
       // TODO send all of these to the webpage and let it be filtered there instead
       if (animation.description.viewCategory == 'BASIC') {
-        return {
+        if (!categoriesToButtons[animation.description.category]) {
+          categoriesToButtons[animation.description.category] = [];
+        }
+
+        categoriesToButtons[animation.description.category].push({
           name: animation.description.description,
           link: '/characters/' + charId + '/' + animation.subActionId
-        };
+        });
       }
+    });
+
+    var buttons = Object.keys(categoriesToButtons).map(function(key) {
+      return (
+        <div>
+          <h3>{key}</h3>
+          <ButtonList buttons={categoriesToButtons[key]}/>
+        </div>
+      );
     });
 
     return (
@@ -61,8 +84,7 @@ var CharacterLayout = React.createClass({
                   attribute_definitions={this.props.attribute_definitions}/>
               </div>
               <div className="flex-item">
-                <h2>Moves</h2>
-                <ButtonList buttons={buttons}/>
+                {buttons}
               </div>
             </div>
           </div>

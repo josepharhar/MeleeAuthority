@@ -79,6 +79,33 @@ public class SubAction {
     .put(0x04C, new SubAction("Uair Landing Lag"))
     .put(0x04D, new SubAction("Dair Landing Lag"))
 
+    .put(0x0B7, new SubAction("Missed Tech", Tech, BASIC)) // DownBoundU
+    // 0x0B8 DownWaitU
+    // 0x0B9 DownDamageU
+    .put(0x0BA, new SubAction("Missed Tech Neutral Get Up", Tech, BASIC)) // DownStandU
+    .put(0x0BB, new SubAction("Missed Tech Get Up Attack", Tech, BASIC)) // DownAttackU
+    .put(0x0BC, new SubAction("Missed Tech Roll Forwards", Tech, BASIC)) // DownForwardU
+    .put(0x0BD, new SubAction("Missed Tech Roll Backwards", Tech, BASIC)) // DownBackU
+    // 0x0BE DownSpotU
+    // TODO what is the difference between "U" and "D" techs? http://opensa.dantarion.com/wiki/Subactions_(Melee)
+    // DownBoundU and DownBoundD have their own pieces of memory for animation commands,
+    // but the animation commands are identical and the animations have the same length on marth.
+    //.put(0x0BF, new SubAction("Missed Tech (DownBoundD)", Tech, BASIC)) // DownBoundD
+
+    //.put(0x0D9, new SubAction("CliffWait1", Ledge, BASIC))
+    //.put(0x0DA, new SubAction("CliffWait2", Ledge, BASIC))
+    .put(0x0DB, new SubAction("Neutral Get Up >100%", Ledge, BASIC)) // CliffClimbSlow
+    .put(0x0DC, new SubAction("Neutral Get Up", Ledge, BASIC)) // CliffClimbQuick
+    .put(0x0DD, new SubAction("Get Up Attack >100%", Ledge, BASIC)) // CliffAttackSlow
+    .put(0x0DE, new SubAction("Get Up Attack", Ledge, BASIC)) // CliffAttackQuick
+    .put(0x0DF, new SubAction("Roll Up >100%", Ledge, BASIC)) // CliffEscapeSlow
+    .put(0x0E0, new SubAction("Roll Up", Ledge, BASIC)) // CliffEscapeQuick
+    // TODO When you do a tournament winner, it does both of these subactions consecutively
+    .put(0x0E1, new SubAction("Tournament Winner part 1 >100%", Ledge, BASIC)) // CliffJumpSlow1
+    .put(0x0E2, new SubAction("Tournament Winner part 2 >100%", Ledge, BASIC)) // CliffJumpSlow2
+    .put(0x0E3, new SubAction("Tournament Winner part 1", Ledge, BASIC)) // CliffJumpQuick1
+    .put(0x0E4, new SubAction("Tournament Winner part 2", Ledge, BASIC)) // CliffJumpQuick2
+
     .put(0x0F7, new SubAction("Forward Throw"))
     .put(0x0F8, new SubAction("Back Throw"))
     .put(0x0F9, new SubAction("Up Throw"))
@@ -767,6 +794,6 @@ public class SubAction {
   }
 
   public static enum SubActionCategory {
-    Tilt, Aerial, Smash, Throw, Item, Special, Dodge, Other
+    Tilt, Aerial, Smash, Throw, Item, Special, Dodge, Other, Tech, Ledge
   }
 }

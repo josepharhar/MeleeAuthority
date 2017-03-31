@@ -42,16 +42,16 @@ app.get('/characters/:charId', function(req, res) {
   });
 });
 
-var findAnimation = function(animations, animationId) {
+var findAnimation = function(animations, subActionId) {
   for (var i = 0; i < animations.length; i++) {
-    if (animations[i].internalName == animationId) {
+    if (animations[i].subActionId == subActionId) {
       return animations[i];
     }
   }
   return null;
 };
 
-app.get('/characters/:charId/:animation', function(req, res) {
+app.get('/characters/:charId/:subActionId', function(req, res) {
   var charId = req.params.charId;
   if (!characters.hasOwnProperty(charId)) {
     // TODO return 404
@@ -59,10 +59,10 @@ app.get('/characters/:charId/:animation', function(req, res) {
     return;
   }
 
-  var animation = findAnimation(animations[charId], req.params.animation);
+  var animation = findAnimation(animations[charId], req.params.subActionId);
   if (animation == null) {
     // TODO return 404
-    console.log('could not find animation "' + req.params.animation + '" for character "' + charId + '"');
+    console.log('could not find subAction "' + req.params.subActionId + '" for character "' + charId + '"');
     return;
   }
 

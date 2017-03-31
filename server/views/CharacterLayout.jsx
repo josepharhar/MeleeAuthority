@@ -39,7 +39,7 @@ var CharacterLayout = React.createClass({
       if (animation.description.viewCategory == 'BASIC') {
         return {
           name: animation.description.description,
-          link: '/characters/' + charId + '/' + animation.internalName
+          link: '/characters/' + charId + '/' + animation.subActionId
         };
       }
     });

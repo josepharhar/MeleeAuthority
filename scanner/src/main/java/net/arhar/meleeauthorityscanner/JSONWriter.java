@@ -56,6 +56,7 @@ public class JSONWriter {
     map.put("frameToHitboxes", animation.frameToHitboxes);
 
     map.put("internalName", animation.internalName);
+    map.put("subActionId", animation.subActionId);
 
     map.put("description", animation.description);
 

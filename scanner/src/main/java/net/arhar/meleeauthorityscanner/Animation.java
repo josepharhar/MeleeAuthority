@@ -49,26 +49,11 @@ public class Animation {
   }
 
   private Set<Integer> calledSubroutines = new HashSet<>();
+  private Stack<Integer> callStack = new Stack<>();
 
   private void asdf(ByteBuffer pldat, int commandListOffset) {
     calledSubroutines.add(commandListOffset);
-    int bytesDown = 0;
-    pldat.position(commandListOffset + bytesDown);
-    // command lists are null terminated by four zero bytes
-    // TODO they can also be null terminated by return right?
-    while (pldat.getInt() != 0) {
-      pldat.position(commandListOffset + bytesDown);
-      AnimationCommandType commandType = AnimationCommandType.getById(pldat.get() & 0xFF);
-      byte[] commandData = new byte[commandType.length];
-      int commandLocation = commandListOffset + bytesDown;
-      pldat.position(commandLocation);
-      for (int i = 0; i < commandType.length; i++) {
-        commandData[i] = pldat.get();
-      }
-      commands.add(new AnimationCommand(commandType, commandLocation, commandData));
-      bytesDown += commandType.length;
-      pldat.position(commandListOffset + bytesDown);
-    }
+    int currentLocation = commandListOffset;
 
     boolean iasa = false;
     boolean hitbox = false;
@@ -78,122 +63,123 @@ public class Animation {
     int currentFrame = 1; // start frame numbering at 1 instead of 0
     int totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
     int loopsRemaining = -1, loopIndex = -1;
-    frameLoop:
-    while (commandIndex < commands.size()
-        || waitFrames > 0
-        || currentFrame < totalFrames) { // TODO check is frameCount comparison is correct here
-      if (commandIndex < commands.size() && waitFrames == 0) {
-        // execute the next command because there is no wait left
-        AnimationCommand command = commands.get(commandIndex++);
-        command.frame = currentFrame;
-
-        switch (command.type) {
-          case ASYNC_TIMER:
-            // async timers: execute the next command on this frame number
-            // async 4 -> do thing on 4th frame, or frames[3]
-            // if we are on frame[0], and we want to do something on frame[3], then we have 3 wait frames
-            // wait frames = asyncframe - 1
-            // it isnt wait this number of frames its do this thing on this frame
-            waitFrames = (command.data[3] & 0xFF) - currentFrame;
-            if (waitFrames < 0) {
-              // the command is telling us to do something on a frame that already occured
-              // just do it now i guess
-              // TODO investigate this more, there are aync timers for frame 0 that worked before for some reason
-              waitFrames = 0;
-            }
-            break;
-          case SYNC_TIMER:
-            waitFrames = command.data[3] & 0xFF;
-            break;
-          case HITBOX:
-            // TODO this is a hack to prevent duplicating hitbox info in loops
-            if (loopsRemaining < 1) {
-              // add the hitbox
-              frameToHitboxes.putIfAbsent(currentFrame, new ArrayList<>());
-              frameToHitboxes.get(currentFrame).add(new Hitbox(command.data));
-            }
-            hitbox = true;
-            break;
-          case IASA:
-            iasa = true;
-            break;
-          case AUTOCANCEL:
-            if ((command.data[3] & 0xFF) == 1) {
-              autocancel = false;
-            } else {
-              autocancel = true;
-            }
-            break;
-          case TERMINATE_ALL_COLLISIONS:
-            hitbox = false;
-            break;
-          case TERMINATE_COLLISION:
-            // TODO this should specify a hitbox or something
-            hitbox = false;
-            break;
-          case SET_LOOP:
-            loopsRemaining = (command.data[3] & 0xFF) - 1;
-            loopIndex = commandIndex;
-            break;
-          case EXEC_LOOP:
-            if (loopsRemaining > 0) {
-              commandIndex = loopIndex;
-              loopsRemaining--;
-            }
-            break;
-          case GOTO:
-          case SUBROUTINE:
-            int offset = ((command.data[4] & 0xFF) << 24)
-              | ((command.data[5] & 0xFF) << 16)
-              | ((command.data[6] & 0xFF) << 8)
-              | (command.data[7] & 0xFF);
-            offset += DatReader.DATA_OFFSET;
-            if (offset == commandListOffset || calledSubroutines.contains(offset)) {
-              //System.out.println("skipping recursion");
-            } else {
-              System.out.printf("calling subroutine 0x%08X from 0x%08X command 0x%08X\n", offset, commandListOffset, command.location);
-              System.out.println("animation: " + character.fullName + " " + internalName);
-              asdf(pldat, offset);
-            }
-
-            if (command.type == AnimationCommandType.GOTO) {
-              return;
-            } else {
-              break;
-            }
-          case RETURN:
-            //break frameLoop;
-            //break;
-            return;
-          case EXIT:
-            return;
-          case ARTICLE:
-          case BODY_STATE:
-          case CHARGE:
-          case CONTINUATION:
-          case GRAPHIC:
-          case MODEL:
-          case RAND_SFX:
-          case REVERSE_DIRECTION:
-          case SELF_DAMAGE:
-          case SET_BONE:
-          case SET_BONES:
-          case SOUND:
-          case TBD:
-          case THROW:
-          case UNKNOWN:
-            // TODO
-            break;
-        }
-      } else {
-        // advance a frame
-        if (waitFrames > 0) {
-          waitFrames--;
-        }
-        currentFrame++;
-
-        frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
+    commandLoop:
+    while (true) {
+      pldat.position(currentLocation);
+      AnimationCommandType commandType = AnimationCommandType.getById(pldat.get() & 0xFF);
+      byte[] commandData = new byte[commandType.length];
+      pldat.position(currentLocation);
+      for (int i = 0; i < commandType.length; i++) {
+        commandData[i] = pldat.get();
       }
+      AnimationCommand command = new AnimationCommand(commandType, currentLocation, commandData);
+      command.totalFrames = totalFrames;
+      commands.add(command);
+      currentLocation += commandType.length;
+
+      command.frame = currentFrame;
+
+      switch (command.type) {
+        case ASYNC_TIMER:
+          // async timers: execute the next command on this frame number
+          // async 4 -> do thing on 4th frame, or frames[3]
+          // if we are on frame[0], and we want to do something on frame[3], then we have 3 wait frames
+          // wait frames = asyncframe - 1
+          // it isnt wait this number of frames its do this thing on this frame
+          waitFrames = (command.data[3] & 0xFF) - currentFrame;
+          if (waitFrames < 0) {
+            // the command is telling us to do something on a frame that already occured
+            // just do it now i guess
+            // TODO investigate this more, there are aync timers for frame 0 that worked before for some reason
+            waitFrames = 0;
+          }
+          addFrames(waitFrames, iasa, hitbox, autocancel);
+          currentFrame += waitFrames;
+          break;
+        case SYNC_TIMER:
+          waitFrames = command.data[3] & 0xFF;
+          addFrames(waitFrames, iasa, hitbox, autocancel);
+          currentFrame += waitFrames;
+          break;
+        case HITBOX:
+          // TODO this is a hack to prevent duplicating hitbox info in loops
+          if (loopsRemaining < 1) {
+            // add the hitbox
+            frameToHitboxes.putIfAbsent(currentFrame, new ArrayList<>());
+            frameToHitboxes.get(currentFrame).add(new Hitbox(command.data));
+          }
+          hitbox = true;
+          break;
+        case IASA:
+          iasa = true;
+          break;
+        case AUTOCANCEL:
+          autocancel = (command.data[3] & 0xFF) != 1;
+          break;
+        case TERMINATE_COLLISION:
+          // TODO this should specify a hitbox or something
+        case TERMINATE_ALL_COLLISIONS:
+          hitbox = false;
+          break;
+        case SET_LOOP:
+          loopsRemaining = (command.data[3] & 0xFF) - 1;
+          loopIndex = commandIndex;
+          break;
+        case EXEC_LOOP:
+          if (loopsRemaining > 0) {
+            commandIndex = loopIndex;
+            loopsRemaining--;
+          }
+          break;
+        case GOTO:
+        case SUBROUTINE:
+          int offset = ((command.data[4] & 0xFF) << 24)
+            | ((command.data[5] & 0xFF) << 16)
+            | ((command.data[6] & 0xFF) << 8)
+            | (command.data[7] & 0xFF);
+          offset += DatReader.DATA_OFFSET;
+          if (offset == commandListOffset || calledSubroutines.contains(offset)) {
+            //System.out.println("skipping recursion");
+          } else {
+            System.out.printf("calling subroutine 0x%08X from 0x%08X command 0x%08X\n", offset, commandListOffset, command.location);
+            System.out.println("animation: " + character.fullName + " " + internalName);
+            callStack.push(currentLocation);
+            calledSubroutines.add(offset);
+            currentLocation = offset;
+          }
+
+          break;
+        case RETURN:
+          break commandLoop; // TODO this should set currentLocation and do a regular break
+          //break;
+        case EXIT:
+          break commandLoop;
+        case ARTICLE:
+        case BODY_STATE:
+        case CHARGE:
+        case CONTINUATION:
+        case GRAPHIC:
+        case MODEL:
+        case RAND_SFX:
+        case REVERSE_DIRECTION:
+        case SELF_DAMAGE:
+        case SET_BONE:
+        case SET_BONES:
+        case SOUND:
+        case TBD:
+        case THROW:
+        case UNKNOWN:
+          // TODO
+          break;
+      }
+    }
+
+    addFrames(totalFrames - currentFrame, iasa, hitbox, autocancel);
+  }
+
+  private void addFrames(int numFrames, boolean iasa, boolean hitbox, boolean autocancel) {
+    for (int i = 0; i < numFrames; i++) {
+      frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
     }
   }
 
@@ -201,7 +187,7 @@ public class Animation {
     public final boolean iasa;
     public final boolean hitbox;
     public final boolean autocancel;
-    // TODO add invulnerability, etc. here
+    // TODO add invulnerability, jump cancelling, etc. here
 
     public FrameStripEntry(boolean iasa, boolean hitbox, boolean autocancel) {
       this.iasa = iasa;
@@ -215,6 +201,7 @@ public class Animation {
     public final int location;
     public final byte[] data;
 
+    public int totalFrames = -1; // TODO delet this
     public int frame = -1;
 
     public AnimationCommand(AnimationCommandType type, int location, byte[] data) {

@@ -33,6 +33,8 @@ public class Animation {
   private Set<Integer> calledSubroutines = new HashSet<>();
   private Stack<Integer> callStack = new Stack<>();
 
+  private boolean iasa = false, hitbox = false, autocancel = false, invulnerable = false, intangible = false;
+
   public Animation(
       ByteBuffer pldat,
       SubActionHeader motherCommand,
@@ -55,9 +57,6 @@ public class Animation {
     calledSubroutines.add(commandListOffset);
     int currentLocation = commandListOffset;
 
-    boolean iasa = false;
-    boolean hitbox = false;
-    boolean autocancel = false;
     int waitFrames = 0;
     int currentFrame = 1; // start frame numbering at 1 instead of 0
     totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
@@ -92,11 +91,11 @@ public class Animation {
             // TODO investigate this more, there are aync timers for frame 0 that worked before for some reason
             waitFrames = 0;
           }
-          currentFrame = addFrames(currentFrame, waitFrames, iasa, hitbox, autocancel);
+          currentFrame = addFrames(currentFrame, waitFrames);
           break;
         case SYNC_TIMER:
           waitFrames = command.data[3] & 0xFF;
-          currentFrame = addFrames(currentFrame, waitFrames, iasa, hitbox, autocancel);
+          currentFrame = addFrames(currentFrame, waitFrames);
           break;
         case HITBOX:
           // TODO this is a hack to prevent duplicating hitbox info in loops
@@ -112,6 +111,10 @@ public class Animation {
           break;
         case AUTOCANCEL:
           autocancel = (command.data[3] & 0xFF) != 1;
+          break;
+        case BODY_STATE:
+          invulnerable = (command.data[3] & 0xFF) == 1;
+          intangible = (command.data[3] & 0xFF) == 2;
           break;
         case TERMINATE_COLLISION:
           // TODO this should specify a hitbox or something
@@ -152,7 +155,6 @@ public class Animation {
         case EXIT:
           break commandLoop;
         case ARTICLE:
-        case BODY_STATE:
         case CHARGE:
         case CONTINUATION:
         case GRAPHIC:
@@ -171,12 +173,12 @@ public class Animation {
       }
     }
 
-    addFrames(currentFrame, totalFrames - currentFrame, iasa, hitbox, autocancel);
+    addFrames(currentFrame, totalFrames - currentFrame);
   }
 
-  private int addFrames(int currentFrame, int numFrames, boolean iasa, boolean hitbox, boolean autocancel) {
+  private int addFrames(int currentFrame, int numFrames) {
     for (int i = 0; i < numFrames && currentFrame < totalFrames; i++) {
-      frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
+      frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel, invulnerable, intangible));
       currentFrame++;
     }
     return currentFrame;
@@ -186,12 +188,16 @@ public class Animation {
     public final boolean iasa;
     public final boolean hitbox;
     public final boolean autocancel;
-    // TODO add invulnerability, jump cancelling, etc. here
+    public final boolean invulnerable;
+    public final boolean intangible;
+    // TODO add jump cancelling, etc. here
 
-    public FrameStripEntry(boolean iasa, boolean hitbox, boolean autocancel) {
+    public FrameStripEntry(boolean iasa, boolean hitbox, boolean autocancel, boolean invulnerable, boolean intangible) {
       this.iasa = iasa;
       this.hitbox = hitbox;
       this.autocancel = autocancel;
+      this.invulnerable = invulnerable;
+      this.intangible = intangible;
     }
   }
 

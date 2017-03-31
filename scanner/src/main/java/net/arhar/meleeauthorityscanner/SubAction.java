@@ -47,10 +47,10 @@ public class SubAction {
 
     .put(0x027, new SubAction("Stop Shield"))
 
-    .put(0x029, new SubAction("Spot Dodge"))
-    .put(0x02A, new SubAction("Dodge Roll Forward"))
-    .put(0x02B, new SubAction("Dodge Roll Backward"))
-    .put(0x02C, new SubAction("Air Dodge"))
+    .put(0x029, new SubAction("Spot Dodge", Dodge, BASIC))
+    .put(0x02A, new SubAction("Dodge Roll Forward", Dodge, BASIC))
+    .put(0x02B, new SubAction("Dodge Roll Backward", Dodge, BASIC))
+    .put(0x02C, new SubAction("Air Dodge", Dodge, BASIC))
     .put(0x02E, new SubAction("Jab 1"))
     .put(0x02F, new SubAction("Jab 2"))
 
@@ -767,6 +767,6 @@ public class SubAction {
   }
 
   public static enum SubActionCategory {
-    Tilt, Aerial, Smash, Throw, Item, Special, Movement, Other
+    Tilt, Aerial, Smash, Throw, Item, Special, Dodge, Other
   }
 }

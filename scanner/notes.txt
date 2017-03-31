@@ -114,3 +114,38 @@ got it!
 WallDamage
 id: 000  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 00004620 "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
 id: 0D4  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 0000620C "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2017-03-31
+
+CLIFFWAIT grab ledge
+CLIFFJUMPQUICK1 tournament winner
+CLIFFCLIMBQUICK regular get up
+CLIFFESCAPEQUICK roll up
+CLIFFCLIMBSLOW 100% regular get up
+CLIFFESCAPESLOW 100% roll up
+CLIFFJUMPSLOW 100% tournament winner
+CLIFFATTACKQUICK get up attack
+CLIFFATTACKSLOW 100% get up attack
+
+DOWNBOUNDU missed tech
+DOWNATTACKU get up attack
+PASSIVE tech in place
+PASSIVESTANDB tech away/backwards
+PASSIVESTANDF tech forwards
+DOWNFORWARDU missed tech roll forwards
+DOWNBACKD missed tech roll away
+DOWNSTANDD missed tech regular get up

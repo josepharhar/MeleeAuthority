@@ -35,6 +35,8 @@ public class JSONWriter {
       frameStripMap.put("Hitbox", animation.frameStrip.get(i).hitbox);
       frameStripMap.put("IASA", animation.frameStrip.get(i).iasa);
       frameStripMap.put("Autocancel", animation.frameStrip.get(i).autocancel);
+      frameStripMap.put("Invulnerable", animation.frameStrip.get(i).invulnerable);
+      frameStripMap.put("Intangible", animation.frameStrip.get(i).intangible);
       frameStrip.add(frameStripMap);
     }
     map.put("frameStrip", frameStrip);

@@ -28,6 +28,11 @@ public class Animation {
   public final int subActionId;
   public final SubAction.SubActionDescription description;
 
+  private final int totalFrames;
+
+  private Set<Integer> calledSubroutines = new HashSet<>();
+  private Stack<Integer> callStack = new Stack<>();
+
   public Animation(
       ByteBuffer pldat,
       SubActionHeader motherCommand,
@@ -45,24 +50,18 @@ public class Animation {
     commands = new ArrayList<>();
     frameStrip = new ArrayList<>();
     System.out.printf("starting call at: %08X\n", motherCommand.getCommandListOffset());
-    asdf(pldat, motherCommand.getCommandListOffset());
-  }
+    int commandListOffset = motherCommand.getCommandListOffset();
 
-  private Set<Integer> calledSubroutines = new HashSet<>();
-  private Stack<Integer> callStack = new Stack<>();
-
-  private void asdf(ByteBuffer pldat, int commandListOffset) {
     calledSubroutines.add(commandListOffset);
     int currentLocation = commandListOffset;
 
     boolean iasa = false;
     boolean hitbox = false;
     boolean autocancel = false;
-    int commandIndex = 0;
     int waitFrames = 0;
     int currentFrame = 1; // start frame numbering at 1 instead of 0
-    int totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
-    int loopsRemaining = -1, loopIndex = -1;
+    totalFrames = (int) frameCount; // TODO this is a guess, and some animations advance "frames" per frame faster than others
+    int loopsRemaining = -1, loopLocation = -1;
     commandLoop:
     while (true) {
       pldat.position(currentLocation);
@@ -93,13 +92,11 @@ public class Animation {
             // TODO investigate this more, there are aync timers for frame 0 that worked before for some reason
             waitFrames = 0;
           }
-          addFrames(waitFrames, iasa, hitbox, autocancel);
-          currentFrame += waitFrames;
+          currentFrame = addFrames(currentFrame, waitFrames, iasa, hitbox, autocancel);
           break;
         case SYNC_TIMER:
           waitFrames = command.data[3] & 0xFF;
-          addFrames(waitFrames, iasa, hitbox, autocancel);
-          currentFrame += waitFrames;
+          currentFrame = addFrames(currentFrame, waitFrames, iasa, hitbox, autocancel);
           break;
         case HITBOX:
           // TODO this is a hack to prevent duplicating hitbox info in loops
@@ -123,11 +120,11 @@ public class Animation {
           break;
         case SET_LOOP:
           loopsRemaining = (command.data[3] & 0xFF) - 1;
-          loopIndex = commandIndex;
+          loopLocation = currentLocation;
           break;
         case EXEC_LOOP:
           if (loopsRemaining > 0) {
-            commandIndex = loopIndex;
+            currentLocation = loopLocation;
             loopsRemaining--;
           }
           break;
@@ -174,13 +171,15 @@ public class Animation {
       }
     }
 
-    addFrames(totalFrames - currentFrame, iasa, hitbox, autocancel);
+    addFrames(currentFrame, totalFrames - currentFrame, iasa, hitbox, autocancel);
   }
 
-  private void addFrames(int numFrames, boolean iasa, boolean hitbox, boolean autocancel) {
-    for (int i = 0; i < numFrames; i++) {
+  private int addFrames(int currentFrame, int numFrames, boolean iasa, boolean hitbox, boolean autocancel) {
+    for (int i = 0; i < numFrames && currentFrame < totalFrames; i++) {
       frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
+      currentFrame++;
     }
+    return currentFrame;
   }
 
   public static class FrameStripEntry {

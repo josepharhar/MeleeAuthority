@@ -11,7 +11,7 @@ public class DatReader {
 
   private static final boolean DEBUG = false;
 
-  private static final int DATA_OFFSET = 0x20;
+  public static final int DATA_OFFSET = 0x20;
 
   public static Map<Character, List<Animation>> readAllAnimations(MeleeImageFileSystem fileSystem) {
     Map<Character, List<Animation>> charactersToAnimations = new LinkedHashMap<>();

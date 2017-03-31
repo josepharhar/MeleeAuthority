@@ -9,7 +9,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Stack;
+import java.util.LinkedList;
 import java.util.TreeMap;
+import net.arhar.meleeauthorityscanner.DatReader;
 import net.arhar.meleeauthorityscanner.DatReader.AJDataHeader;
 import net.arhar.meleeauthorityscanner.DatReader.SubActionHeader;
 
@@ -20,12 +23,10 @@ public class Animation {
   public final List<FrameStripEntry> frameStrip;
   public final Map<Integer, List<Hitbox>> frameToHitboxes;
 
+  public final Character character;
   public final String internalName;
   public final int subActionId;
   public final SubAction.SubActionDescription description;
-
-  // TODO remove this
-  public static boolean temp = false;
 
   public Animation(
       ByteBuffer pldat,
@@ -33,37 +34,41 @@ public class Animation {
       AJDataHeader ajHeader,
       Character character,
       int subActionId) {
-    if (temp) {
-      System.out.println();
-    }
-
+    this.character = character;
     this.frameCount = ajHeader.frameCount;
-
     this.subActionId = subActionId;
     this.internalName = motherCommand.shortName;
     this.description = SubAction.getDescription(character, subActionId);
+    this.frameToHitboxes = new TreeMap<>((one, two) -> one - two); // TODO this could be the wrong order
 
     // parse the commands from the file
     commands = new ArrayList<>();
     frameStrip = new ArrayList<>();
-    int commandListOffset = motherCommand.getCommandListOffset();
+    System.out.printf("starting call at: %08X\n", motherCommand.getCommandListOffset());
+    asdf(pldat, motherCommand.getCommandListOffset());
+  }
+
+  private Set<Integer> calledSubroutines = new HashSet<>();
+
+  private void asdf(ByteBuffer pldat, int commandListOffset) {
+    calledSubroutines.add(commandListOffset);
     int bytesDown = 0;
     pldat.position(commandListOffset + bytesDown);
     // command lists are null terminated by four zero bytes
+    // TODO they can also be null terminated by return right?
     while (pldat.getInt() != 0) {
       pldat.position(commandListOffset + bytesDown);
       AnimationCommandType commandType = AnimationCommandType.getById(pldat.get() & 0xFF);
       byte[] commandData = new byte[commandType.length];
-      pldat.position(commandListOffset + bytesDown);
+      int commandLocation = commandListOffset + bytesDown;
+      pldat.position(commandLocation);
       for (int i = 0; i < commandType.length; i++) {
         commandData[i] = pldat.get();
       }
-      commands.add(new AnimationCommand(commandType, commandData));
+      commands.add(new AnimationCommand(commandType, commandLocation, commandData));
       bytesDown += commandType.length;
       pldat.position(commandListOffset + bytesDown);
     }
-
-    frameToHitboxes = new TreeMap<>((one, two) -> one - two); // TODO this could be the wrong order
 
     boolean iasa = false;
     boolean hitbox = false;
@@ -111,18 +116,12 @@ public class Animation {
             break;
           case IASA:
             iasa = true;
-            if (temp) {
-              System.out.println("iasa on frame " + currentFrame);
-            }
             break;
           case AUTOCANCEL:
             if ((command.data[3] & 0xFF) == 1) {
               autocancel = false;
             } else {
               autocancel = true;
-            }
-            if (temp) {
-              System.out.println("autocancel on frame " + currentFrame + ": " + autocancel);
             }
             break;
           case TERMINATE_ALL_COLLISIONS:
@@ -143,10 +142,31 @@ public class Animation {
             }
             break;
           case GOTO:
-          case RETURN:
           case SUBROUTINE:
-            // TODO
-            break frameLoop;
+            int offset = ((command.data[4] & 0xFF) << 24)
+              | ((command.data[5] & 0xFF) << 16)
+              | ((command.data[6] & 0xFF) << 8)
+              | (command.data[7] & 0xFF);
+            offset += DatReader.DATA_OFFSET;
+            if (offset == commandListOffset || calledSubroutines.contains(offset)) {
+              //System.out.println("skipping recursion");
+            } else {
+              System.out.printf("calling subroutine 0x%08X from 0x%08X command 0x%08X\n", offset, commandListOffset, command.location);
+              System.out.println("animation: " + character.fullName + " " + internalName);
+              asdf(pldat, offset);
+            }
+
+            if (command.type == AnimationCommandType.GOTO) {
+              return;
+            } else {
+              break;
+            }
+          case RETURN:
+            //break frameLoop;
+            //break;
+            return;
+          case EXIT:
+            return;
           case ARTICLE:
           case BODY_STATE:
           case CHARGE:
@@ -175,10 +195,6 @@ public class Animation {
         frameStrip.add(new FrameStripEntry(iasa, hitbox, autocancel));
       }
     }
-
-    if (temp) {
-      System.out.println();
-    }
   }
 
   public static class FrameStripEntry {
@@ -196,13 +212,15 @@ public class Animation {
 
   public static class AnimationCommand {
     public final AnimationCommandType type;
+    public final int location;
     public final byte[] data;
 
     public int frame = -1;
 
-    public AnimationCommand(AnimationCommandType type, byte[] data) {
+    public AnimationCommand(AnimationCommandType type, int location, byte[] data) {
       this.type = type;
       this.data = data;
+      this.location = location;
     }
   }
 }

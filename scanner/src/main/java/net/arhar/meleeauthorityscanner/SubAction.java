@@ -762,7 +762,7 @@ public class SubAction {
     public SubActionDescription(String description) {
       this.description = description;
       this.category = SubActionCategory.Other;
-      this.viewCategory = ViewCategory.ADVANCED;
+      this.viewCategory = ViewCategory.BASIC;
     }
   }
 

@@ -43,6 +43,7 @@ public class JSONWriter {
     for (int i = 0; i < animation.commands.size(); i++) {
       Map<String, Object> commandMap = new LinkedHashMap<>();
       commandMap.put("Command Type", animation.commands.get(i).type.name());
+      commandMap.put("Location", String.format("0x%08X", animation.commands.get(i).location));
       // TODO mark data as monospaced somehow?
       commandMap.put("Data", toHexString(animation.commands.get(i).data));
       commands.add(commandMap);

@@ -48,7 +48,6 @@ public class JSONWriter {
       commandMap.put("Location", String.format("0x%08X", animation.commands.get(i).location));
       // TODO mark data as monospaced somehow?
       commandMap.put("Data", toHexString(animation.commands.get(i).data));
-      commandMap.put("totalFrames: ", animation.commands.get(i).totalFrames);
       commands.add(commandMap);
     }
     map.put("commands", commands);

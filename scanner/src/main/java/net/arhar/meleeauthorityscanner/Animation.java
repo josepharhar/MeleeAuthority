@@ -71,7 +71,6 @@ public class Animation {
         commandData[i] = pldat.get();
       }
       AnimationCommand command = new AnimationCommand(commandType, currentLocation, commandData);
-      command.totalFrames = totalFrames;
       commands.add(command);
       currentLocation += commandType.length;
 
@@ -206,7 +205,6 @@ public class Animation {
     public final int location;
     public final byte[] data;
 
-    public int totalFrames = -1; // TODO delet this
     public int frame = -1;
 
     public AnimationCommand(AnimationCommandType type, int location, byte[] data) {

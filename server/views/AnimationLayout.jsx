@@ -155,12 +155,12 @@ class AnimationLayout extends React.Component {
             <h1>{title}</h1>
             <div className="flex-container">
               <div className="flex-item">
-                <h2>Hitboxes</h2>
-                {hitboxTables}
-              </div>
-              <div className="flex-item">
                 <h2>Frame Strip</h2>
                 <FrameStripTable frameStrip={animation.frameStrip}/>
+              </div>
+              <div className="flex-item">
+                <h2>Hitboxes</h2>
+                {hitboxTables}
               </div>
               <div className="flex-item">
                 <h2>Animation Commands</h2>

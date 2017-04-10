@@ -92,6 +92,10 @@ public class SubAction {
     // but the animation commands are identical and the animations have the same length on marth.
     //.put(0x0BF, new SubAction("Missed Tech (DownBoundD)", Tech, BASIC)) // DownBoundD
 
+    .put(0x0C7, new SubAction("Tech In Place", Tech, BASIC)) // Passive
+    .put(0x0C8, new SubAction("Tech Forwards", Tech, BASIC)) // PassiveStandF
+    .put(0x0C9, new SubAction("Tech Backwards", Tech, BASIC)) // PassiveStandB
+
     //.put(0x0D9, new SubAction("CliffWait1", Ledge, BASIC))
     //.put(0x0DA, new SubAction("CliffWait2", Ledge, BASIC))
     .put(0x0DB, new SubAction("Neutral Get Up >100%", Ledge, BASIC)) // CliffClimbSlow
@@ -105,6 +109,10 @@ public class SubAction {
     .put(0x0E2, new SubAction("Tournament Winner part 2 >100%", Ledge, BASIC)) // CliffJumpSlow2
     .put(0x0E3, new SubAction("Tournament Winner part 1", Ledge, BASIC)) // CliffJumpQuick1
     .put(0x0E4, new SubAction("Tournament Winner part 2", Ledge, BASIC)) // CliffJumpQuick2
+    
+    // tech in place: Passive
+    // tech backwards: PassiveStandB
+    // tech forwards: PassiveStandF
 
     .put(0x0F7, new SubAction("Forward Throw"))
     .put(0x0F8, new SubAction("Back Throw"))

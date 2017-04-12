@@ -134,6 +134,38 @@ class AnimationCommandsTable extends React.Component {
   }
 }
 
+class OtherTable extends React.Component {
+  render() {
+    var animation = this.props.animation;
+    var variableToLabel = {
+      'frameCount': 'Total Frames',
+      'subActionId': 'Sub Action Id',
+      'internalName': 'Sub Action Name'
+    };
+
+    var asdf = Object.keys(variableToLabel).map(function(key) {
+      return (
+        <tr>
+          <th>{variableToLabel[key]}</th>
+          <td>{animation[key]}</td>
+        </tr>
+      );
+    });
+
+    return (
+      <table className="attribute-table table table-hover table-bordered">
+        <thead>
+          <th>Property</th>
+          <th>Value</th>
+        </thead>
+        <tbody>
+          {asdf}
+        </tbody>
+      </table>
+    );
+  }
+}
+
 class AnimationLayout extends React.Component {
   render() {
     var animation = this.props.animation;
@@ -165,6 +197,10 @@ class AnimationLayout extends React.Component {
               <div className="flex-item">
                 <h2>Animation Commands</h2>
                 <AnimationCommandsTable commands={animation.commands}/>
+              </div>
+              <div className="flex-item">
+                <h2>Other</h2>
+                <OtherTable animation={animation}/>
               </div>
             </div>
           </div>

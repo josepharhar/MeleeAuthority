@@ -33,9 +33,20 @@ class HitboxesTable extends React.Component {
     var tableBody = this.props.hitboxes.map(function(hitbox) {
       var columns = [];
       for (var key in hitbox) {
-        columns.push(hitbox[key]);
+        // TODO make this not rely on 'angle' literal
+        if (key == 'angle') {
+          var no_padding_style = { padding: '0px' };
+          columns.push(
+            <td className='angle-td' style={no_padding_style}>
+              <canvas className='angle-canvas' width="32" height="32" data-angle={hitbox[key]} />
+            </td>
+          );
+        } else {
+          columns.push(
+            <td>{hitbox[key]}</td>
+          );
+        }
       }
-      columns = toTableData(columns);
 
       return (
         <tr>{columns}</tr>
@@ -154,10 +165,6 @@ class OtherTable extends React.Component {
 
     return (
       <table className="attribute-table table table-hover table-bordered">
-        <thead>
-          <th>Property</th>
-          <th>Value</th>
-        </thead>
         <tbody>
           {asdf}
         </tbody>
@@ -205,6 +212,7 @@ class AnimationLayout extends React.Component {
             </div>
           </div>
           <BodyScripts />
+          <script src='/static/animation.js'></script>
         </body>
       </html>
     );

@@ -17,6 +17,7 @@ for (var i = 0; i < canvases.length; i++) {
 
   // TODO add tooltips or other text with angles
 
+  context.lineWidth = 3;
   if (angle >= 260 && angle <= 280) {
     context.strokeStyle = 'yellow';
   } else {
@@ -28,13 +29,13 @@ for (var i = 0; i < canvases.length; i++) {
     gradient.addColorStop(1, 'transparent');
     context.fillStyle = gradient;
     context.fillRect(0, 0, width, width);
-  } else {
-    context.beginPath();
-    context.moveTo(width / 2, width / 2);
-      angle = angle * Math.PI / 180;
-      context.lineTo(
-          radius + radius * 0.8 * Math.cos(angle),
-          radius - radius * 0.8 * Math.sin(angle));
-    context.stroke();
+    angle = 45;
   }
+  context.beginPath();
+  context.moveTo(width / 2, width / 2);
+    angle = angle * Math.PI / 180;
+    context.lineTo(
+        radius + radius * 0.8 * Math.cos(angle),
+        radius - radius * 0.8 * Math.sin(angle));
+  context.stroke();
 }

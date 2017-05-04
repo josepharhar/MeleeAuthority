@@ -114,6 +114,7 @@ WallDamage
 id: 000  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 00004620 "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
 id: 0D4  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 0000620C "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
 
+
 2017-03-31
 
 CLIFFWAIT grab ledge
@@ -135,3 +136,15 @@ DOWNFORWARDU missed tech roll forwards
 DOWNBACKD missed tech roll away
 DOWNSTANDD missed tech regular get up
 
+
+2017-5-3
+
+fox's animation id info during shine
+subactionid  ???
+360  313   0x168 0x139
+3 frames
+361  314   0x169 0x13A
+end of loop
+363  316   0x16B 0x13C
+i have a hunch that subaction 361 has special info for jump cancelling in it outside of the animation commands
+i also have a hunch that the subactions have more special info for which animation to run next after this one

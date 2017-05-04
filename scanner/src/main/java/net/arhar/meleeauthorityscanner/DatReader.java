@@ -464,6 +464,8 @@ public class DatReader {
    * animation header data? for inner-AJ dat files
    * similar to FtDataHeader
    *
+   * https://smashboards.com/threads/animation-hacking-documentation.426374/#post-20908162
+   *
    * 0x00 ? could be number of animations, always 1
    * 0x04 ? always 0
    * 0x08 frame count FLOAT
@@ -476,12 +478,21 @@ public class DatReader {
     public final float frameCount;
     public final int boneTablePointer;
 
+    public final int undefined0x10;
+    public final int undefined0x14;
+    public final int undefined0x18;
+    public final int undefined0x1C;
+
     public AJDataHeader(ByteBuffer ajdat, RootNode rootNode) {
       ajdat.position(rootNode.getDataOffset());
       undefined0x00 = ajdat.getInt();
       undefined0x04 = ajdat.getInt();
       frameCount = ajdat.getFloat();
       boneTablePointer = ajdat.getInt();
+      undefined0x10 = ajdat.getInt();
+      undefined0x14 = ajdat.getInt();
+      undefined0x18 = ajdat.getInt();
+      undefined0x1C = ajdat.getInt();
     }
   }
 }

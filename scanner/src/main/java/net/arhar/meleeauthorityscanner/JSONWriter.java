@@ -57,6 +57,12 @@ public class JSONWriter {
     map.put("internalName", animation.internalName);
     map.put("subActionId", animation.subActionId);
     map.put("frameCount", animation.frameCount);
+    map.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
+    map.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
+    map.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
+    map.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
+    map.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
+    map.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));
 
     map.put("description", animation.description);
 

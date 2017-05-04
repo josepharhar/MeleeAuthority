@@ -18,6 +18,19 @@ app.get('/', function(req, res) {
   res.render('HomeLayout');
 });
 
+app.get('/character-table/:charId', function(req, res) {
+  var charId = req.params.charId;
+  if (!character.hasOwnProperty(charId)) {
+    // TODO return 404 or something
+    console.log('could not find charId "' + charId + '"');
+    return;
+  }
+
+  res.render('CharacterTableLayout', {
+    charId: charId
+  });
+});
+
 app.get('/characters', function(req, res) {
   res.render('CharactersListLayout', {
     characters: characters

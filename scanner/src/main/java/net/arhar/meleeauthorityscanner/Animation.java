@@ -30,6 +30,9 @@ public class Animation {
 
   public final int totalFrames;
 
+  public final SubActionHeader motherCommand;
+  public final AJDataHeader ajDataHeader;
+
   private Set<Integer> calledSubroutines = new HashSet<>();
   private Stack<Integer> callStack = new Stack<>();
 
@@ -38,15 +41,17 @@ public class Animation {
   public Animation(
       ByteBuffer pldat,
       SubActionHeader motherCommand,
-      AJDataHeader ajHeader,
+      AJDataHeader ajDataHeader,
       Character character,
       int subActionId) {
     this.character = character;
-    this.frameCount = ajHeader.frameCount;
+    this.frameCount = ajDataHeader.frameCount;
     this.subActionId = subActionId;
     this.internalName = motherCommand.shortName;
     this.description = SubAction.getDescription(character, subActionId);
     this.frameToHitboxes = new TreeMap<>((one, two) -> one - two); // TODO this could be the wrong order
+    this.motherCommand = motherCommand;
+    this.ajDataHeader = ajDataHeader;
 
     // parse the commands from the file
     commands = new ArrayList<>();

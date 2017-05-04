@@ -151,7 +151,13 @@ class OtherTable extends React.Component {
     var variableToLabel = {
       'frameCount': 'Total Frames',
       'subActionId': 'Sub Action Id',
-      'internalName': 'Sub Action Name'
+      'internalName': 'Sub Action Name',
+      'motherCommand.undefined0x10': 'motherCommand.undefined0x10',
+      'motherCommand.undefined0x14': 'motherCommand.undefined0x14',
+      'ajDataHeader.undefined0x10': 'ajDataHeader.undefined0x10',
+      'ajDataHeader.undefined0x14': 'ajDataHeader.undefined0x14',
+      'ajDataHeader.undefined0x18': 'ajDataHeader.undefined0x18',
+      'ajDataHeader.undefined0x1C': 'ajDataHeader.undefined0x1C'
     };
 
     var asdf = Object.keys(variableToLabel).map(function(key) {

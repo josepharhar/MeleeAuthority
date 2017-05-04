@@ -536,7 +536,7 @@ public class SubAction {
       .put(Kp, new SubActionDescription("Bowser Down-B (Ground)"))
       .put(Ca, new SubActionDescription("Falcon Down-B (Air)"))
       .put(Gn, new SubActionDescription("Ganon Down-B (Air)"))
-      .put(Fx, new SubActionDescription("Fox Down-B Start (Ground)"))
+      .put(Fx, new SubActionDescription("Fox Down-B Start (Ground)", Aerial, BASIC)) //asdf
       .put(Fc, new SubActionDescription("Falco Down-B Start (Ground)"))
       .put(Gw, new SubActionDescription("G&W Side-B(8) (Air)"))
       .put(Pr, new SubActionDescription("Jigglypuff Neutral-B(4) (Air)"))
@@ -554,7 +554,7 @@ public class SubAction {
       .put(Kp, new SubActionDescription("Bowser Down-B (Air)"))
       .put(Ca, new SubActionDescription("Falcon Down-B End (Air)"))
       .put(Gn, new SubActionDescription("Ganon Down-B End (Air)"))
-      .put(Fx, new SubActionDescription("Fox Down-B Loop (Ground)"))
+      .put(Fx, new SubActionDescription("Fox Down-B Loop (Ground)", Aerial, BASIC)) //asdf
       .put(Fc, new SubActionDescription("Falco Down-B Loop (Ground)"))
       .put(Gw, new SubActionDescription("G&W Side-B(9) (Air)"))
       .put(Pr, new SubActionDescription("Jigglypuff Neutral-B End (R) (Air)"))

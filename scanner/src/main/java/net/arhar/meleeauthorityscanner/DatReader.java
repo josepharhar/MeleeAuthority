@@ -134,43 +134,74 @@ public class DatReader {
   /**
    * Header Data
    *
-   * <p>Data Block
+   * Data Block
    *
-   * <p>relocationTableCount # file offsets relative to data section (+0x20)
+   * relocationTableCount # file offsets relative to data section (+0x20)
    *
-   * <p>two Root Node lists root nodes are a 4 byte data offset and a 4 byte string pointer size of
-   * lists are rootCount0x0C and rootCount0x10
+   * two Root Node lists
+   * root nodes are a 4 byte data offset and a 4 byte string pointer
+   * size of lists are rootCount0x0C and rootCount0x10
    *
-   * <p>.dat file structure +-----------------------------------------------------------+ | 0x20
-   * bytes Header | +-----------------------------------------------------------+ |
-   * datasize/dataBlockSize bytes data |
-   * +-----------------------------------------------------------+ |
-   * offsetCount/relocationTableCount bytes pointers to data |
-   * +-----------------------------------------------------------+ | ftDataCount/rootCount0x0C * 2
-   * bytes ptr/stringpointers | +-----------------------------------------------------------+ |
-   * secondarySectionCount/rootCount0x10 ^ |
-   * +-----------------------------------------------------------+ | ?? bytes string table |
+   * .dat file structure
+   * +-----------------------------------------------------------+
+   * | 0x20 bytes Header                                         |
+   * +-----------------------------------------------------------+
+   * | datasize/dataBlockSize bytes data                         |
+   * +-----------------------------------------------------------+
+   * | offsetCount/relocationTableCount bytes pointers to data   |
+   * +-----------------------------------------------------------+
+   * | ftDataCount/rootCount0x0C * 2 bytes ptr/stringpointers    |
+   * +-----------------------------------------------------------+
+   * | secondarySectionCount/rootCount0x10 ^                     |
+   * +-----------------------------------------------------------+
+   * | ?? bytes string table                                     |
    * +-----------------------------------------------------------+
    *
-   * <p>PlMs.dat 0x00000000 dat Header 0x00000020 data section start reset index to zero ? string
-   * table 0x00003724 attributes start 0x000038A8 attributes end ? 0x00007CF0 subactions start
-   * 0x00009B98 subactions end 0x00009D6C "ftDataMars" -> attributes ptrs, subaction ptrs ?
-   * 0x000278A0 relocation table 0x0002AB9C rootOffset0 0x0002AB9C ROOT_NODE "ftDataMars" ->
-   * 0x00009D6C 0x0002ABA4 rootOffset1 0x0002ABA4 string table
+   * PlMs.dat
+   * 0x00000000 dat Header
+   * 0x00000020 data section start
+   * reset index to zero
+   * ? string table
+   * 0x00003724  attributes start
+   * 0x000038A8  attributes end
+   * ?
+   * 0x00007CF0  subactions start
+   * 0x00009B98  subactions end
+   * 0x00009D6C  "ftDataMars" -> attributes ptrs, subaction ptrs
+   * ?
+   * 0x000278A0 relocation table
+   * 0x0002AB9C rootOffset0
+   * 0x0002AB9C  ROOT_NODE "ftDataMars" -> 0x00009D6C
+   * 0x0002ABA4 rootOffset1
+   * 0x0002ABA4 string table
    *
-   * <p>PlGn.dat [+0x20] 0x000036FC attributes start 0x00003880 attributes end 0x000075F0 subactions
-   * start 0x000093C0 subactions end
    *
-   * <p>0x0002CE60 relocation offset 0x000312A4 rootOffset0 0x000312AC rootOffset1 0x000312AC string
-   * table
+   * PlGn.dat
+   * [+0x20]
+   * 0x000036FC attributes start
+   * 0x00003880 attributes end
+   * 0x000075F0 subactions start
+   * 0x000093C0 subactions end
+   *
+   * 0x0002CE60 relocation offset
+   * 0x000312A4 rootOffset0
+   * 0x000312AC rootOffset1
+   * 0x000312AC string table
    */
 
   /**
-   * Dat Header appears at the beginning of each dat file data section starts at the end of the Dat
-   * Header, at 0x20
+   * Dat Header
+   * appears at the beginning of each dat file
+   * data section starts at the end of the Dat Header, at 0x20
    *
-   * <p>0x00 filesize 0x04 data block size 0x08 relocation table count 0x0C root count 0x10
-   * secondary root count 0x14 version? "001B" 0x18 undefined 0x1C undefined
+   * 0x00 filesize
+   * 0x04 data block size
+   * 0x08 relocation table count
+   * 0x0C root count
+   * 0x10 secondary root count
+   * 0x14 version? "001B"
+   * 0x18 undefined
+   * 0x1C undefined
    */
   private static class DatHeader {
     public final int offset;
@@ -222,9 +253,12 @@ public class DatReader {
   }
 
   /**
-   * Root Node one or more appear near the end of dat files has a pointer to data section
+   * Root Node
+   * one or more appear near the end of dat files
+   * has a pointer to data section
    *
-   * <p>0x00 data pointer 0x04 string pointer
+   * 0x00 data pointer
+   * 0x04 string pointer
    */
   private static class RootNode {
     public final int dataPointer;
@@ -247,11 +281,17 @@ public class DatReader {
   }
 
   /**
-   * Ft Data Header contains pointers to character info sections pointed to by a root node
+   * Ft Data Header
+   * contains pointers to character info sections
+   * pointed to by a root node
    *
-   * <p>0x00 attributes start pointer 0x04 attributes end pointer 0x08 undefined 0x0C subaction
-   * headers list start pointer 0x10 undefined 0x14 subaction headers list end pointer 0x18
-   * undefined
+   * 0x00 attributes start pointer
+   * 0x04 attributes end pointer
+   * 0x08 undefined
+   * 0x0C subaction headers list start pointer
+   * 0x10 undefined
+   * 0x14 subaction headers list end pointer
+   * 0x18 undefined
    */
   private static class FtDataHeader {
     public final int attributesStart;
@@ -295,13 +335,17 @@ public class DatReader {
   }
 
   /**
-   * SubAction Header called "Mother Command" here:
-   * http://smashboards.com/threads/animation-hacking-documentation.426374/ FtDataHeader has a
-   * pointer to a list of these which exist in the data section
+   * SubAction Header
+   * called "Mother Command" here: http://smashboards.com/threads/animation-hacking-documentation.426374/
+   * FtDataHeader has a pointer to a list of these which exist in the data section
    *
-   * <p>0x00 string pointer (in data section) 0x04 Pl__AJ.dat pointer 0x08 Pl__AJ.dat length 0x0C
-   * SubAction command list pointer there is a unique pointer for each Header, even if the list of
-   * commands is just a null terminator 0x10 undefined 0x14 undefined
+   * 0x00 string pointer (in data section)
+   * 0x04 Pl__AJ.dat pointer
+   * 0x08 Pl__AJ.dat length
+   * 0x0C SubAction command list pointer
+   *      there is a unique pointer for each Header, even if the list of commands is just a null terminator
+   * 0x10 undefined
+   * 0x14 undefined
    */
   public static class SubActionHeader {
     public static final int SUBACTION_HEADER_LENGTH_BYTES = 6 * 4;
@@ -395,20 +439,36 @@ public class DatReader {
   /**
    * Each animation in the AJ files have their own header
    *
-   * <p>0x00 animation size 0x04 data section size 0x08 ? this seems important - 0x00000085 for
-   * falcon up tilt 0x0C ? one of these is probably a string pointer set to zero 0x10 ? 0x14 ? 0x18
-   * ? 0x1C ?
+   * 0x00 animation size
+   * 0x04 data section size
+   * 0x08 ? this seems important - 0x00000085 for falcon up tilt
+   * 0x0C ? one of these is probably a string pointer set to zero
+   * 0x10 ?
+   * 0x14 ?
+   * 0x18 ?
+   * 0x1C ?
    *
-   * <p>Single animation within Pl__AJ.dat +--------------------+ | 0x20 header |
-   * +--------------------+ | data section | +--------------------+ | ? | +--------------------+ |
-   * string table | +--------------------+
+   * Single animation within Pl__AJ.dat
+   * +--------------------+
+   * | 0x20 header        |
+   * +--------------------+
+   * | data section       |
+   * +--------------------+
+   * | ?                  |
+   * +--------------------+
+   * | string table       |
+   * +--------------------+
    */
 
   /**
-   * animation header data? for inner-AJ dat files similar to FtDataHeader
+   * animation header data? for inner-AJ dat files
+   * similar to FtDataHeader
    *
-   * <p>0x00 ? could be number of animations, always 1 0x04 ? always 0 0x08 frame count FLOAT 0x0C
-   * bone table pointer 0x10-- animation info
+   * 0x00 ? could be number of animations, always 1
+   * 0x04 ? always 0
+   * 0x08 frame count FLOAT
+   * 0x0C bone table pointer
+   * 0x10-- animation info
    */
   public static class AJDataHeader {
     public final int undefined0x00;

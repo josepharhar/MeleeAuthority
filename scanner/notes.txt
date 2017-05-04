@@ -40,7 +40,6 @@ without l cancel advances 0.94 "animation frames" per frame
 with l cancel - advances 1.88 frames per frame instead
 
 
-
 replacing ganons uptilt with falcons
 
 ganon uptilt command list start		PlGn.dat 0x7B80
@@ -50,6 +49,7 @@ AttackHi3 uptilt offset				 0x003A
 AttackHi3 uptilt offset * 6 * 4			 0x0570
 subOffset + x20 + xC + offset*6*4		 0x7B8C
 					PlGn.dat 0x7B8C = 0x00004850 -> +x20 points to command list
+
 
 so "subactionPointer" from crazy hand points to the green hilighted four bytes:
 http://smashboards.com/attachments/1-png.88524/
@@ -96,7 +96,6 @@ in Ms.anm: SpecialAirHi 9292 712384 11281 130
 SubAction.java: (0x142, "Marth Up-B (Air)")
 
 
-
 falcon up tilt
 PlCaAJ.dat start 0x00055E20  <- header is 0x20 bytes
     0x00: 0x000026C5 mini-dat size
@@ -114,20 +113,6 @@ got it!
 WallDamage
 id: 000  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 00004620 "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
 id: 0D4  strPtr: 00000018 ajPtr: 00180080 ajLen: 00002E2F commandsPtr: 0000620C "PlyMars5K_Share_ACTION_WallDamage_figatree" "WallDamage"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 2017-03-31
 

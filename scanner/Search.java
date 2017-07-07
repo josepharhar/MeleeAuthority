@@ -27,11 +27,16 @@ public class Search {
       System.out.printf("Converted short " + shortValue + " to 0x%02X%02X\n", firstByte, secondByte);
     }
 
+    searchBytes.position(0);
+    for (int i = 0; i < 20; i++) {
+      System.out.printf("attackairf[%03X]: %08X\n", i, searchBytes.getInt());
+    }
+
     FileChannel meleeFileChannel = new RandomAccessFile("melee.iso", "r").getChannel();
     /*ByteBuffer meleeBytes = ByteBuffer.allocate((int) meleeFileChannel.size());
     meleeFileChannel.read(meleeBytes);
     meleeBytes.flip();*/
-    MappedByteBuffer meleeBytes = meleeFileChannel.map(FileChannel.MapMode.READ_ONLY, 0, meleeFileChannel.size());
+    /*MappedByteBuffer meleeBytes = meleeFileChannel.map(FileChannel.MapMode.READ_ONLY, 0, meleeFileChannel.size());
     meleeBytes.load();
     
     int searchIndex = 0;
@@ -59,6 +64,6 @@ public class Search {
     } else {
       // didn't find
       System.out.println("didn't find search in melee");
-    }
+    }*/
   }
 }

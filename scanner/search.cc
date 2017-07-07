@@ -2,10 +2,9 @@
 #include <ifstream>
 #include <stdio.h>
 
-template<typename T>
+/*template<typename T>
 T SwitchEndianness() {
-
-}
+}*/
 
 int main(int argc, char** argv) {
   std::ifstream melee_file("melee.iso", ios::binary);

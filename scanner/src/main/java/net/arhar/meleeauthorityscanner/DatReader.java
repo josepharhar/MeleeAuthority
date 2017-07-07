@@ -489,6 +489,7 @@ public class DatReader {
       undefined0x04 = ajdat.getInt();
       frameCount = ajdat.getFloat();
       boneTablePointer = ajdat.getInt();
+
       undefined0x10 = ajdat.getInt();
       undefined0x14 = ajdat.getInt();
       undefined0x18 = ajdat.getInt();

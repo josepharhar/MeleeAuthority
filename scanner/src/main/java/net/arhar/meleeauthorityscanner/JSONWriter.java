@@ -54,15 +54,17 @@ public class JSONWriter {
 
     map.put("frameToHitboxes", animation.frameToHitboxes);
 
-    map.put("internalName", animation.internalName);
-    map.put("subActionId", animation.subActionId);
-    map.put("frameCount", animation.frameCount);
-    map.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
-    map.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
-    map.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
-    map.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
-    map.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
-    map.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));
+    Map<String, Object> stats = new LinkedHashMap<>();
+    stats.put("internalName", animation.internalName);
+    stats.put("subActionId", animation.subActionId);
+    stats.put("frameCount", animation.frameCount);
+    stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
+    stats.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
+    stats.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
+    stats.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
+    stats.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
+    stats.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));
+    map.put("stats", stats);
 
     map.put("description", animation.description);
 

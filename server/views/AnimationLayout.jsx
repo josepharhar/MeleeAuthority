@@ -145,9 +145,9 @@ class AnimationCommandsTable extends React.Component {
   }
 }
 
-class OtherTable extends React.Component {
+class StatsTable extends React.Component {
   render() {
-    var animation = this.props.animation;
+    var stats = this.props.stats;
     var variableToLabel = {
       'frameCount': 'Total Frames',
       'subActionId': 'Sub Action Id',
@@ -160,11 +160,14 @@ class OtherTable extends React.Component {
       'ajDataHeader.undefined0x1C': 'ajDataHeader.undefined0x1C'
     };
 
-    var asdf = Object.keys(variableToLabel).map(function(key) {
+    var asdf = Object.keys(stats).map(function(key) {
+      if (variableToLabel.hasOwnProperty(key)) {
+        key = variableToLabel[key];
+      }
       return (
         <tr>
-          <th>{variableToLabel[key]}</th>
-          <td>{animation[key]}</td>
+          <th>{key}<th>
+          <td>{stats[key]}</td>
         </tr>
       );
     });
@@ -212,8 +215,8 @@ class AnimationLayout extends React.Component {
                 <AnimationCommandsTable commands={animation.commands}/>
               </div>
               <div className="flex-item">
-                <h2>Other</h2>
-                <OtherTable animation={animation}/>
+                <h2>Stats</h2>
+                <StatsTable stats={animation.stats}/>
               </div>
             </div>
           </div>

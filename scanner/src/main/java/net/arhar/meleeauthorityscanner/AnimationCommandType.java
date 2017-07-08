@@ -2,6 +2,9 @@ package net.arhar.meleeauthorityscanner;
 
 import java.util.Arrays;
 
+// TODO
+// https://github.com/Adjective-Object/melee_subaction_unpacker/blob/assimp/src/event_mapper.hpp
+
 // http://opensa.dantarion.com/wiki/Events_(Melee)
 public enum AnimationCommandType {
   EXIT(0x00, 0x4, "Exit"),

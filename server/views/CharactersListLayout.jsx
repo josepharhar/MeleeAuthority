@@ -3,8 +3,8 @@ var ButtonList = require('./ButtonList');
 var HeadScripts = require('./HeadScripts');
 var BodyScripts = require('./BodyScripts');
 
-var CharactersListLayout = React.createClass({
-  render: function() {
+class CharactersListLayout extends React.Component {
+  render() {
     var characters = this.props.characters;
     var numCharacters = Object.keys(characters).length;
 
@@ -50,6 +50,6 @@ var CharactersListLayout = React.createClass({
       </html>
     );
   }
-});
+}
 
 module.exports = CharactersListLayout;

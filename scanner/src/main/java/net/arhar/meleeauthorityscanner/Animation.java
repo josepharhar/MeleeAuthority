@@ -38,6 +38,85 @@ public class Animation {
 
   private boolean iasa = false, hitbox = false, autocancel = false, invulnerable = false, intangible = false;
 
+  int getActiveFrame() {
+    for (int i = 0; i < frameStrip.size(); i++) {
+      FrameStripEntry entry = frameStrip.get(i);
+      if (entry.hitbox || entry.invulnerable || entry.intangible) {
+        return i + 1;
+      }
+    }
+    return -1;
+  }
+
+  int getIasaFrame() {
+    for (int i = 0; i < frameStrip.size(); i++) {
+      FrameStripEntry entry = frameStrip.get(i);
+      if (entry.iasa) {
+        return i + 1;
+      }
+    }
+    return -1;
+  }
+
+  int getNetLengthFrame() {
+    int iasa = getIasaFrame();
+    if (iasa == -1) {
+      return totalFrames;
+    } else if (totalFrames > iasa) {
+      return iasa;
+    } else {
+      return totalFrames;
+    }
+  }
+
+  int getMaxDamage() {
+    int maxDamage = -1;
+    for (Map.Entry<Integer, List<Hitbox>> entry : frameToHitboxes.entrySet()) {
+      for (Hitbox hitbox : entry.getValue()) {
+        if (hitbox.damage > maxDamage) {
+          maxDamage = hitbox.damage;
+        }
+      }
+    }
+    return maxDamage;
+  }
+
+  int getMaxBaseKnockback() {
+    int maxBaseKnockback = -1;
+    for (Map.Entry<Integer, List<Hitbox>> entry : frameToHitboxes.entrySet()) {
+      for (Hitbox hitbox : entry.getValue()) {
+        if (hitbox.baseKnockback > maxBaseKnockback) {
+          maxBaseKnockback = hitbox.baseKnockback;
+        }
+      }
+    }
+    return maxBaseKnockback;
+  }
+
+  int getMaxScalingKnockback() {
+    int maxScalingKnockback = -1;
+    for (Map.Entry<Integer, List<Hitbox>> entry : frameToHitboxes.entrySet()) {
+      for (Hitbox hitbox : entry.getValue()) {
+        if (hitbox.knockbackScaling > maxScalingKnockback) {
+          maxScalingKnockback = hitbox.knockbackScaling;
+        }
+      }
+    }
+    return maxScalingKnockback;
+  }
+
+  int getFixedKnockback() {
+    int maxFixedKnockback = -1;
+    for (Map.Entry<Integer, List<Hitbox>> entry : frameToHitboxes.entrySet()) {
+      for (Hitbox hitbox : entry.getValue()) {
+        if (hitbox.fixedKnockback > maxFixedKnockback) {
+          maxFixedKnockback = hitbox.fixedKnockback;
+        }
+      }
+    }
+    return maxFixedKnockback;
+  }
+
   public Animation(
       ByteBuffer pldat,
       SubActionHeader motherCommand,

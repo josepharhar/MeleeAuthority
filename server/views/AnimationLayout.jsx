@@ -148,7 +148,7 @@ class AnimationCommandsTable extends React.Component {
 class StatsTable extends React.Component {
   render() {
     var stats = this.props.stats;
-    var variableToLabel = {
+    var variableToLabel = { // TODO delet this
       'frameCount': 'Total Frames',
       'subActionId': 'Sub Action Id',
       'internalName': 'Sub Action Name',
@@ -166,7 +166,7 @@ class StatsTable extends React.Component {
       }
       return (
         <tr>
-          <th>{key}<th>
+          <th>{key}</th>
           <td>{stats[key]}</td>
         </tr>
       );

@@ -54,10 +54,19 @@ public class JSONWriter {
 
     map.put("frameToHitboxes", animation.frameToHitboxes);
 
+    map.put("subActionId", animation.subActionId);
+    map.put("internalName", animation.internalName);
+
     Map<String, Object> stats = new LinkedHashMap<>();
-    stats.put("internalName", animation.internalName);
-    stats.put("subActionId", animation.subActionId);
-    stats.put("frameCount", animation.frameCount);
+    //stats.put("internalName", animation.internalName);
+    //stats.put("subActionId", animation.subActionId);
+    stats.put("Active Frame", animation.getActiveFrame());
+    stats.put("IASA Frame", animation.getIasaFrame());
+    stats.put("Total Frames", animation.frameCount);
+    stats.put("Max Damage", animation.getMaxDamage());
+    stats.put("Max Base Knockback", animation.getMaxBaseKnockback());
+    stats.put("Max Scaling Knockback", animation.getMaxScalingKnockback());
+    stats.put("Fixed Knockback", animation.getFixedKnockback());
     stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
     stats.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
     stats.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
@@ -87,7 +96,6 @@ public class JSONWriter {
                 "fullName", attribute.fullName,
                 "viewCategory", attribute.viewCategory.name()))));
     objectMapper.writeValue(new File("json/character_attributes.json"), charactersToAttributes);
-    //objectMapper.writeValue(new File("json/animations.json"), charactersToAnimations);
     objectMapper.writeValue(new File("json/animations.json"),
         charactersToAnimations.entrySet().stream()
           .map(entry -> new AbstractMap.SimpleEntry(entry.getKey().name(), entry.getValue().stream()

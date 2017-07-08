@@ -18,6 +18,16 @@ app.get('/', function(req, res) {
   res.render('HomeLayout');
 });
 
+app.get('/character-stats', function(req, res) {
+
+
+  res.render('CharacterStatsLayout', {
+    characters: characters,
+    attributes: attributes,
+    attributeDefinitions: attribute_definitions
+  });
+});
+
 app.get('/character-table/:charId', function(req, res) {
   var charId = req.params.charId;
   if (!character.hasOwnProperty(charId)) {

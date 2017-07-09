@@ -1,22 +1,24 @@
 class StatsTable extends React.Component {
-  render() {
+  getDefaultCharIds() {
+    return Object.keys(this.props.attributes);
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = { charIds: this.getDefaultCharIds() };
+    this.handleSortClick = this.handleSortClick.bind(this);
+  }
+
+  createCharacterRows(charIds) {
+    const attributeDefinitions = this.props.attributeDefinitions;
     const attributes = this.props.attributes;
     const characters = this.props.characters;
-    const attributeDefinitions = this.props.attributeDefinitions;
+    const attributeKeys = this.filteredAttributeKeys();
 
-    const attributeKeys = this.props.attributeKeys.filter(function(key) {
-      return attributeDefinitions[key].viewCategory == 'BASIC';
-    });
-
-    const headerRow = attributeKeys.map(function(key) {
-      return <th>{key}</th>;
-    });
-
-    const characterRows = Object.keys(attributes).map(function(charId) {
+    return charIds.map(function(charId) {
       const row = attributeKeys.map(function(key) {
         return <td>{attributes[charId][key]}</td>;
       });
-
       return (
         <tr>
           <td>{characters[charId]}</td>
@@ -24,13 +26,56 @@ class StatsTable extends React.Component {
         </tr>
       );
     });
+  }
+
+  handleSortClick(e) {
+    const attribute = e.target.innerText;
+    // need to create a mapping between charId and this category,
+    // then sort charIds based on values of this category
+    const defaultCharIds = this.getDefaultCharIds();
+    const attributes = this.props.attributes;
+
+    const compareCharAndValue = function(a, b) {
+      return a.value - b.value;
+    };
+
+    const sortedCharIds = defaultCharIds.map(function(charId) {
+      return {
+        charId: charId,
+        value: attributes[charId][attribute]
+      }
+    })
+    .sort(compareCharAndValue)
+    .map(function(charAndValue) {
+      return charAndValue.charId;
+    });
+
+    this.setState({
+      charIds: sortedCharIds
+    });
+  }
+
+  filteredAttributeKeys() {
+    const attributeDefinitions = this.props.attributeDefinitions;
+    return this.props.attributeKeys.filter(function(key) {
+      return attributeDefinitions[key].viewCategory == 'BASIC';
+    });
+  }
+
+  render() {
+    const handleClick = this.handleSortClick;
+    const headerRow = this.filteredAttributeKeys().map(function(key) {
+      return <th onClick={handleClick}>{key}</th>;
+    });
+
+    const characterRows = this.createCharacterRows(this.state.charIds);
 
     // TODO use class attribute-table?
     return (
       <table className='table table-hover table-bordered'>
         <thead>
           <tr>
-            <th>Character</th>
+            <th onClick={handleClick}>Character</th>
             {headerRow}
           </tr>
         </thead>

@@ -11,32 +11,32 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 var StatsTable = function (_React$Component) {
   _inherits(StatsTable, _React$Component);
 
-  function StatsTable() {
+  _createClass(StatsTable, [{
+    key: 'getDefaultCharIds',
+    value: function getDefaultCharIds() {
+      return Object.keys(this.props.attributes);
+    }
+  }]);
+
+  function StatsTable(props) {
     _classCallCheck(this, StatsTable);
 
-    return _possibleConstructorReturn(this, (StatsTable.__proto__ || Object.getPrototypeOf(StatsTable)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (StatsTable.__proto__ || Object.getPrototypeOf(StatsTable)).call(this, props));
+
+    _this.state = { charIds: _this.getDefaultCharIds() };
+    _this.handleSortClick = _this.handleSortClick.bind(_this);
+    return _this;
   }
 
   _createClass(StatsTable, [{
-    key: 'render',
-    value: function render() {
+    key: 'createCharacterRows',
+    value: function createCharacterRows(charIds) {
+      var attributeDefinitions = this.props.attributeDefinitions;
       var attributes = this.props.attributes;
       var characters = this.props.characters;
-      var attributeDefinitions = this.props.attributeDefinitions;
+      var attributeKeys = this.filteredAttributeKeys();
 
-      var attributeKeys = this.props.attributeKeys.filter(function (key) {
-        return attributeDefinitions[key].viewCategory == 'BASIC';
-      });
-
-      var headerRow = attributeKeys.map(function (key) {
-        return React.createElement(
-          'th',
-          null,
-          key
-        );
-      });
-
-      var characterRows = Object.keys(attributes).map(function (charId) {
+      return charIds.map(function (charId) {
         var row = attributeKeys.map(function (key) {
           return React.createElement(
             'td',
@@ -44,7 +44,6 @@ var StatsTable = function (_React$Component) {
             attributes[charId][key]
           );
         });
-
         return React.createElement(
           'tr',
           null,
@@ -56,6 +55,54 @@ var StatsTable = function (_React$Component) {
           row
         );
       });
+    }
+  }, {
+    key: 'handleSortClick',
+    value: function handleSortClick(e) {
+      var attribute = e.target.innerText;
+      // need to create a mapping between charId and this category,
+      // then sort charIds based on values of this category
+      var defaultCharIds = this.getDefaultCharIds();
+      var attributes = this.props.attributes;
+
+      var compareCharAndValue = function compareCharAndValue(a, b) {
+        return a.value - b.value;
+      };
+
+      var sortedCharIds = defaultCharIds.map(function (charId) {
+        return {
+          charId: charId,
+          value: attributes[charId][attribute]
+        };
+      }).sort(compareCharAndValue).map(function (charAndValue) {
+        return charAndValue.charId;
+      });
+
+      this.setState({
+        charIds: sortedCharIds
+      });
+    }
+  }, {
+    key: 'filteredAttributeKeys',
+    value: function filteredAttributeKeys() {
+      var attributeDefinitions = this.props.attributeDefinitions;
+      return this.props.attributeKeys.filter(function (key) {
+        return attributeDefinitions[key].viewCategory == 'BASIC';
+      });
+    }
+  }, {
+    key: 'render',
+    value: function render() {
+      var handleClick = this.handleSortClick;
+      var headerRow = this.filteredAttributeKeys().map(function (key) {
+        return React.createElement(
+          'th',
+          { onClick: handleClick },
+          key
+        );
+      });
+
+      var characterRows = this.createCharacterRows(this.state.charIds);
 
       // TODO use class attribute-table?
       return React.createElement(
@@ -69,7 +116,7 @@ var StatsTable = function (_React$Component) {
             null,
             React.createElement(
               'th',
-              null,
+              { onClick: handleClick },
               'Character'
             ),
             headerRow

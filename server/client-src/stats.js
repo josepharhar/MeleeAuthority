@@ -5,7 +5,11 @@ class StatsTable extends React.Component {
 
   constructor(props) {
     super(props);
-    this.state = { charIds: this.getDefaultCharIds() };
+    this.state = {
+      charIds: this.getDefaultCharIds(),
+      sortedAttribute: '',
+      sortedIncreasing: false
+    };
     this.handleSortClick = this.handleSortClick.bind(this);
   }
 
@@ -29,15 +33,25 @@ class StatsTable extends React.Component {
   }
 
   handleSortClick(e) {
-    const attribute = e.target.innerText;
+    const attribute = e.target.id;
     // need to create a mapping between charId and this category,
     // then sort charIds based on values of this category
     const defaultCharIds = this.getDefaultCharIds();
     const attributes = this.props.attributes;
 
-    const compareCharAndValue = function(a, b) {
-      return a.value - b.value;
+    var increasing = true;
+    if (this.state.sortedAttribute == attribute) {
+      increasing = !this.state.sortedIncreasing;
+    }
+
+    const compareCharAndValue = function(increasing, a, b) {
+      if (increasing) {
+        return b.value - a.value;
+      } else {
+        return a.value - b.value;
+      }
     };
+    const compareFunc = compareCharAndValue.bind(this, increasing);
 
     const sortedCharIds = defaultCharIds.map(function(charId) {
       return {
@@ -45,13 +59,15 @@ class StatsTable extends React.Component {
         value: attributes[charId][attribute]
       }
     })
-    .sort(compareCharAndValue)
+    .sort(compareFunc)
     .map(function(charAndValue) {
       return charAndValue.charId;
     });
 
     this.setState({
-      charIds: sortedCharIds
+      charIds: sortedCharIds,
+      sortedAttribute: attribute,
+      sortedIncreasing: increasing
     });
   }
 
@@ -64,8 +80,23 @@ class StatsTable extends React.Component {
 
   render() {
     const handleClick = this.handleSortClick;
-    const headerRow = this.filteredAttributeKeys().map(function(key) {
-      return <th onClick={handleClick}>{key}</th>;
+    const state = this.state;
+    const headerRow = ['charId'].concat(this.filteredAttributeKeys()).map(function(key) {
+      var columnText = key;
+
+      if (columnText == 'charId') {
+        columnText = 'Character';
+      }
+
+      if (key == state.sortedAttribute) {
+        if (state.sortedIncreasing) {
+          columnText += ' \u25b2';
+        } else {
+          columnText += ' \u25bc';
+        }
+      }
+
+      return <th onClick={handleClick} id={key}>{columnText}</th>;
     });
 
     const characterRows = this.createCharacterRows(this.state.charIds);
@@ -74,10 +105,7 @@ class StatsTable extends React.Component {
     return (
       <table className='table table-hover table-bordered'>
         <thead>
-          <tr>
-            <th onClick={handleClick}>Character</th>
-            {headerRow}
-          </tr>
+          <tr>{headerRow}</tr>
         </thead>
         <tbody>{characterRows}</tbody>
       </table>

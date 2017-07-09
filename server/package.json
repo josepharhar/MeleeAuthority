@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "main": "server.js",
   "scripts": {
-    "build": "babel src -d static",
-    "scrape": "node scrape.js"
+    "scrape": "node scrape.js",
+    "prestart": "babel client-src -d client-build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

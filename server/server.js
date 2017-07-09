@@ -79,7 +79,7 @@ app.get('/characters/:charId', function(req, res) {
     character: characters[charId],
     attributes: attributes[charId],
     animations: animations[charId],
-    attribute_definitions: attributeDefinitinos
+    attribute_definitions: attributeDefinitions
   });
 });
 

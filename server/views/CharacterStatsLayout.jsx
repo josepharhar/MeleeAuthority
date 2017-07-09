@@ -57,7 +57,9 @@ class CharacterStatsLayout extends React.Component {
         <body>
           <div className="container">
             <h1>Character Stats</h1>
-            <div id="stats-container"></div>
+            <div id="stats-container">
+              <div className="loader"></div>
+            </div>
           </div>
           <BodyScripts />
           <script src="/client-build/stats.js"></script>

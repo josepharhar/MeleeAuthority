@@ -85,17 +85,25 @@ public class JSONWriter {
       Map<Character, List<Animation>> charactersToAnimations) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
 
+    System.out.println("Attribute.getViewOrder():");
+    for (Attribute attribute : Attribute.getViewOrder()) {
+      System.out.print(attribute.name() + " ");
+    }
+    System.out.println();
+
     objectMapper.writeValue(new File("json/characters.json"),
         Arrays.stream(Character.values())
           .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
-    objectMapper.writeValue(new File("json/attributes.json"),
+    objectMapper.writeValue(new File("json/attributeKeys.json"), // TODO this is gross
+        Attribute.getViewOrder());
+    objectMapper.writeValue(new File("json/attributeDefinitions.json"),
         Arrays.stream(Attribute.values())
           .collect(Collectors.toMap(
               attribute -> attribute.name(),
               attribute -> ImmutableMap.of(
                 "fullName", attribute.fullName,
                 "viewCategory", attribute.viewCategory.name()))));
-    objectMapper.writeValue(new File("json/character_attributes.json"), charactersToAttributes);
+    objectMapper.writeValue(new File("json/attributes.json"), charactersToAttributes);
     objectMapper.writeValue(new File("json/animations.json"),
         charactersToAnimations.entrySet().stream()
           .map(entry -> new AbstractMap.SimpleEntry(entry.getKey().name(), entry.getValue().stream()

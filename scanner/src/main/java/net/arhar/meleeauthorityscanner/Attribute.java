@@ -1,5 +1,7 @@
 package net.arhar.meleeauthorityscanner;
 
+import java.util.*;
+
 /** Ordinal value indicates position on disc Enum name is used for SQL schema */
 public enum Attribute {
   InitWalkVel("Initial Walk Velocity", Float.class, ViewCategory.ADVANCED, null),
@@ -9,10 +11,10 @@ public enum Attribute {
   MidWalkPoint("Mid Walk Point?", Float.class, ViewCategory.ADVANCED, null), // unknown
   FastWalkMin("Fast Walk Min?", Float.class, ViewCategory.ADVANCED, null), // unknown
   Friction("Friction/Stop Deccel", Float.class, ViewCategory.ADVANCED, "Influences wavedash length, lower is slidier"),
-  DashInitVel("Dash Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
+  DashInitVel("Dash Initial Velocity", Float.class, ViewCategory.BASIC, null),
   DashAccelA("Dash & Run Acceleration A", Float.class, ViewCategory.ADVANCED, null),
   DashAccelB("Dash & Run Acceleration B", Float.class, ViewCategory.ADVANCED, null),
-  DashTermVel("Dash & Run Terminal Velocity", Float.class, ViewCategory.ADVANCED, null),
+  DashTermVel("Dash & Run Terminal Velocity", Float.class, ViewCategory.BASIC, null),
   RunAnimScal("Run Animation Scaling", Float.class, ViewCategory.ADVANCED, null),
   RunAccel("Run Acceleration?", Float.class, ViewCategory.ADVANCED, null), // unknown
   Unknown14(Attribute.UNKNOWN, Float.class, ViewCategory.UNKNOWN, null), // unknown
@@ -24,7 +26,7 @@ public enum Attribute {
   SHVInitVel("Shorthop V Initial Velocity", Float.class, ViewCategory.ADVANCED, null),
   AirJMult("Air Jump Multiplier", Float.class, ViewCategory.ADVANCED, null),
   DblJMult("Double Jump Momentum", Float.class, ViewCategory.ADVANCED, null),
-  NumJumps("Number of Jumps", Integer.class, ViewCategory.BASIC, null),
+  NumJumps("Number of Jumps", Integer.class, ViewCategory.ADVANCED, null),
   Gravity("Gravity", Float.class, ViewCategory.BASIC, null),
   TermVel("Terminal Velocity", Float.class, ViewCategory.BASIC, null),
   AirMobA("Air Mobility A", Float.class, ViewCategory.ADVANCED, null),
@@ -59,12 +61,12 @@ public enum Attribute {
   Unknown55(Attribute.UNKNOWN, Integer.class, ViewCategory.UNKNOWN, null), // unknown
   Unknown56(Attribute.UNKNOWN, Integer.class, ViewCategory.UNKNOWN, null), // unknown
   StarDmg("Kirby Neutral+B Star Damage", Float.class, ViewCategory.ADVANCED, null),
-  ALag("Normal Landing Lag", Float.class, ViewCategory.BASIC, null),
-  NLag("Nair Landing Lag", Float.class, ViewCategory.BASIC, null),
-  FLag("Fair Landing Lag", Float.class, ViewCategory.BASIC, null),
-  BLag("Bair Landing Lag", Float.class, ViewCategory.BASIC, null),
-  ULag("Uair Landing Lag", Float.class, ViewCategory.BASIC, null),
-  DLag("Dair Landing Lag", Float.class, ViewCategory.BASIC, null),
+  LandLag("Normal Landing Lag", Float.class, ViewCategory.BASIC, null),
+  NLag("Nair Landing Lag", Float.class, ViewCategory.ADVANCED, null),
+  FLag("Fair Landing Lag", Float.class, ViewCategory.ADVANCED, null),
+  BLag("Bair Landing Lag", Float.class, ViewCategory.ADVANCED, null),
+  ULag("Uair Landing Lag", Float.class, ViewCategory.ADVANCED, null),
+  DLag("Dair Landing Lag", Float.class, ViewCategory.ADVANCED, null),
   VMdlScaling("Victory Screen Window Model Scaling", Float.class, ViewCategory.ADVANCED, null),
   Unknown65(Attribute.UNKNOWN, Integer.class, ViewCategory.UNKNOWN, null), // unknown
   WJmpHVel("WallJump H Velocity", Float.class, ViewCategory.ADVANCED, null),
@@ -111,5 +113,26 @@ public enum Attribute {
     this.numberType = numberType;
     this.viewCategory = viewCategory;
     this.notes = notes;
+  }
+
+  // used to create user friendly order of columns set up on webpage
+  public static List<Attribute> getViewOrder() {
+    List<Attribute> attributes = new ArrayList<>();
+    
+    attributes.add(JumpSquat);
+    attributes.add(Weight);
+    attributes.add(Gravity);
+    attributes.add(TermVel);
+    attributes.add(FFTermVel);
+    attributes.add(DashInitVel);
+    attributes.add(DashTermVel);
+    attributes.add(LandLag);
+
+    for (Attribute attribute : Attribute.values()) {
+      if (!attributes.contains(attribute)) {
+        attributes.add(attribute);
+      }
+    }
+    return attributes;
   }
 }

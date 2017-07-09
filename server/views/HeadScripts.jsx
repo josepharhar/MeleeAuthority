@@ -1,7 +1,7 @@
 var React = require('react');
 
-var HeadScripts = React.createClass({
-  render: function() {
+class HeadScripts extends React.Component {
+  render() {
     //return <link rel="stylesheet" href="/static/bootstrap-cyborg.min.css" />;
     return (
       <div>
@@ -11,6 +11,6 @@ var HeadScripts = React.createClass({
       </div>
     );
   }
-});
+}
 
 module.exports = HeadScripts;

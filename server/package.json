@@ -7,12 +7,13 @@
     "scrape": "node scrape.js"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
+    "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.18.0",
-    "babel-preset-react": "^6.16.0",
+    "babel-preset-react": "^6.24.1",
     "crawler": "^1.0.2",
     "express": "^4.14.0",
     "express-react-views": "^0.10.2",
+    "glob": "^7.1.2",
     "mkdirp": "^0.5.1",
     "morgan": "^1.7.0",
     "react": "^15.4.2",

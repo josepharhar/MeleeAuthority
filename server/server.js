@@ -1,11 +1,15 @@
 var express = require('express');
 var reactViews = require('express-react-views');
 var morgan = require('morgan');
+var babel = require('babel-core');
+var fs = require('fs');
+var glob = require('glob');
 
 var characters = require('./json/characters.json');
-var attribute_definitions = require('./json/attributes.json');
-var attributes = require('./json/character_attributes.json');
+var attributeDefinitions = require('./json/attributeDefinitions.json');
+var attributes = require('./json/attributes.json');
 var animations = require('./json/animations.json');
+var attributeKeys = require('./json/attributeKeys.json');
 
 var app = express();
 app.use(morgan('dev'));
@@ -13,6 +17,19 @@ app.set('view engine', 'jsx');
 app.engine('jsx', reactViews.createEngine());
 
 app.use('/static', express.static('static'));
+app.use('/json', express.static('json'));
+app.use('/client-build', express.static('client-build'));
+
+// compile static react client files
+glob.sync('*.js', { cwd: './client-src' }).forEach(function(filename) {
+  console.log('filename: ' + filename);
+  var srcFilepath = './client-src/' + filename;
+  var destFilepath = './client-build/' + filename;
+  fs.writeFileSync(destFilepath,
+      babel.transformFileSync(
+          srcFilepath,
+          { presets: ['react', 'es2015'] }).code);
+});
 
 app.get('/', function(req, res) {
   res.render('HomeLayout');
@@ -24,7 +41,8 @@ app.get('/character-stats', function(req, res) {
   res.render('CharacterStatsLayout', {
     characters: characters,
     attributes: attributes,
-    attributeDefinitions: attribute_definitions
+    attributeDefinitions: attributeDefinitions,
+    attributeKeys: attributeKeys
   });
 });
 
@@ -61,7 +79,7 @@ app.get('/characters/:charId', function(req, res) {
     character: characters[charId],
     attributes: attributes[charId],
     animations: animations[charId],
-    attribute_definitions: attribute_definitions
+    attribute_definitions: attributeDefinitinos
   });
 });
 

@@ -4,6 +4,9 @@
 mkdir -p build
 npm run scrape
 cp -r static build
+cp -r client-build build
+mkdir -p build/json
+cp json/*.json build/json
 
 # push files
 cd build

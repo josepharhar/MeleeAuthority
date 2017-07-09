@@ -3,12 +3,16 @@ var ButtonList = require('./ButtonList');
 var HeadScripts = require('./HeadScripts');
 var BodyScripts = require('./BodyScripts');
 
-var HomeLayout = React.createClass({
-  render: function() {
+class HomeLayout extends React.Component {
+  render() {
     var buttons = [
       {
         name: 'Characters',
         link: '/characters'
+      },
+      {
+        name: 'Character Stats',
+        link: '/character-stats'
       }
     ];
   
@@ -28,6 +32,6 @@ var HomeLayout = React.createClass({
       </html>
     );
   }
-});
+}
 
 module.exports = HomeLayout;

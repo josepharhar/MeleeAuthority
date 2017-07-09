@@ -8,16 +8,16 @@ class StatsTable extends React.Component {
     const characters = this.props.characters;
     const attributeDefinitions = this.props.attributeDefinitions;
 
-    const attributeKeys = Object.keys(attributeDefinitions).filter(function(key) {
+    //const attributeKeys = Object.keys(attributeDefinitions).filter(function(key) {
+    //const attributeKeys = Object.getOwnPropertyNames(attributeDefinitions).filter(function(key) {
+    const attributeKeys = this.props.attributeKeys.filter(function(key) {
       return attributeDefinitions[key].viewCategory == 'BASIC';
     });
 
     console.log('attributeKeys: ' + JSON.stringify(attributeKeys));
 
     const headerRow = attributeKeys.map(function(key) {
-      return (
-        <th>{key}</th>
-      );
+      return <th>{key}</th>;
     });
 
     const characterRows = Object.keys(attributes).map(function(charId) {
@@ -33,8 +33,9 @@ class StatsTable extends React.Component {
       );
     });
 
+    // TODO use class attribute-table?
     return (
-      <table>
+      <table className='table table-hover table-bordered'>
         <tr>
           <th>Character</th>
           {headerRow}
@@ -56,13 +57,10 @@ class CharacterStatsLayout extends React.Component {
         <body>
           <div className="container">
             <h1>Character Stats</h1>
-            <StatsTable attributes={this.props.attributes}
-              characters={this.props.characters}
-              attributeDefinitions={this.props.attributeDefinitions}/>
+            <div id="stats-container"></div>
           </div>
           <BodyScripts />
-          <script src="//cdnjs.cloudflare.com/ajax/libs/list.js/1.5.0/list.min.js"></script>
-          <script src="/static/character-stats.js"></script>
+          <script src="/client-build/stats.js"></script>
         </body>
       </html>
     );

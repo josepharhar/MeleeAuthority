@@ -62,6 +62,7 @@ class CharacterStatsLayout extends React.Component {
             </div>
           </div>
           <BodyScripts />
+          <script src="/client-build/table.js"></script>
           <script src="/client-build/stats.js"></script>
         </body>
       </html>

@@ -67,12 +67,12 @@ public class JSONWriter {
     stats.put("Max Base Knockback", animation.getMaxBaseKnockback());
     stats.put("Max Scaling Knockback", animation.getMaxScalingKnockback());
     stats.put("Fixed Knockback", animation.getFixedKnockback());
-    stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
+    /*stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
     stats.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
     stats.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
     stats.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
     stats.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
-    stats.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));
+    stats.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));*/
     map.put("stats", stats);
 
     map.put("description", animation.description);
@@ -112,5 +112,10 @@ public class JSONWriter {
           ))
           .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()))
     );
+
+    // map<charId, map<animationname, stats>>
+    objectMapper.writeValue(new File("json/move-stats.json"),
+        charactersToAnimations.entrySet().stream()
+          .map(entry ->
   }
 }

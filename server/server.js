@@ -24,12 +24,11 @@ app.get('/', function(req, res) {
 });
 
 app.get('/character-stats', function(req, res) {
-  res.render('CharacterStatsLayout', {
-    characters: characters,
-    attributes: attributes,
-    attributeDefinitions: attributeDefinitions,
-    attributeKeys: attributeKeys
-  });
+  res.render('CharacterStatsLayout', {});
+});
+
+app.get('/moves-table', function(req, res) {
+  res.render('MovesTableLayout', {});
 });
 
 app.get('/character-table/:charId', function(req, res) {

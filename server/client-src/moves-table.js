@@ -1,34 +1,41 @@
 downloadJson(
   [
-    '/json/attributes.json',
-    '/json/attributeKeys.json',
-    '/json/characters.json',
-    '/json/animations.json'
-    //'/json/attributeDefinitions.json'
+    '/json/charIdToName.json',
+    '/json/charIdToSubactionIdToStats.json',
+    '/json/charIdToSubactionIdToInfo.json'
   ],
   (jsons) => {
-    const attributes = jsons[0];
-    const attributeKeys = jsons[1];
-    const characters = jsons[2];
-    const animations = jsons[3];
-    window.animations = animations;
+    const charIdToName = jsons[0];
+    const charIdToSubactionIdToStats = jsons[1];
+    const charIdToSubactionIdToInfo = jsons[2];
 
-    const sampleStats = animations['Ca'][0].stats;
+    const sampleStats = charIdToSubactionIdToStats['Ca'][0];
 
     const columnIds = ['Character', 'Animation'].concat(Object.keys(sampleStats));
-    const columnNames = {};
+    // TODO this shouldnt be necessary?
+    const columnIdToName = {};
     columnIds.forEach((columnId) => {
-      columnNames[columnId] = columnName;
+      columnIdToName[columnId] = columnId;
     });
     
-    const columnValues = {};
+    const entryIdToColumnIdToValue = {};
+    Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
+      Object.keys(charIdToSubactionId[charId]).forEach((subactionId) => {
+        const entryId = charId + subactionId;
+        entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
+        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subActionId]['description'];
+        columnIds.forEach((columnId) => {
+          entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subActionId][columnId];
+        });
+      });
+    });
 
     const entryIdToName = {};
 
     ReactDOM.render(<Table
         columnIds={columnIds}
-        columnNames={columnNames}
-        columnValues={columnValues}
+        columnNames={columnIdToName}
+        columnValues={entryIdToColumnIdToValue}
         entryIdToName={entryIdToName} />,
         document.getElementById('stats-container'));
 });

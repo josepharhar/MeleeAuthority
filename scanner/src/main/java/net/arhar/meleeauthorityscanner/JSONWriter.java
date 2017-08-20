@@ -16,19 +16,20 @@ public class JSONWriter {
     this.outputPath = outputPath;
   }
 
-  private String toHexString(byte[] data) {
+  /*private String toHexString(byte[] data) {
     StringBuilder builder = new StringBuilder();
     builder.append("0x");
     for (int i = 0; i < data.length; i++) {
       builder.append(String.format("%02X", data[i]));
     }
     return builder.toString();
-  }
+  }*/
 
+  // TODO delet this
   private Map<String, Object> convertAnimation(Animation animation) {
     Map<String, Object> map = new LinkedHashMap<>();
 
-    List<Map<String, Object>> frameStrip = new ArrayList<>();
+    /*List<Map<String, Object>> frameStrip = new ArrayList<>();
     for (int i = 0; i < animation.frameStrip.size(); i++) {
       Map<String, Object> frameStripMap = new LinkedHashMap<>();
       frameStripMap.put("Frame", i);
@@ -39,9 +40,10 @@ public class JSONWriter {
       frameStripMap.put("Intangible", animation.frameStrip.get(i).intangible);
       frameStrip.add(frameStripMap);
     }
-    map.put("frameStrip", frameStrip);
+    map.put("frameStrip", frameStrip);*/
+    map.put("frameStrip", animation.getFrameStrip());
 
-    List<Map<String, Object>> commands = new ArrayList<>();
+    /*List<Map<String, Object>> commands = new ArrayList<>();
     for (int i = 0; i < animation.commands.size(); i++) {
       Map<String, Object> commandMap = new LinkedHashMap<>();
       commandMap.put("Command Type", animation.commands.get(i).type.name());
@@ -50,30 +52,15 @@ public class JSONWriter {
       commandMap.put("Data", toHexString(animation.commands.get(i).data));
       commands.add(commandMap);
     }
-    map.put("commands", commands);
+    map.put("commands", commands);*/
+    map.put("commands", animation.getCommands());
 
     map.put("frameToHitboxes", animation.frameToHitboxes);
 
     map.put("subActionId", animation.subActionId);
     map.put("internalName", animation.internalName);
 
-    Map<String, Object> stats = new LinkedHashMap<>();
-    //stats.put("internalName", animation.internalName);
-    //stats.put("subActionId", animation.subActionId);
-    stats.put("Active Frame", animation.getActiveFrame());
-    stats.put("IASA Frame", animation.getIasaFrame());
-    stats.put("Total Frames", animation.frameCount);
-    stats.put("Max Damage", animation.getMaxDamage());
-    stats.put("Max Base Knockback", animation.getMaxBaseKnockback());
-    stats.put("Max Scaling Knockback", animation.getMaxScalingKnockback());
-    stats.put("Fixed Knockback", animation.getFixedKnockback());
-    /*stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
-    stats.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
-    stats.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
-    stats.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
-    stats.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
-    stats.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));*/
-    map.put("stats", stats);
+    map.put("stats", animation.getStats());
 
     map.put("description", animation.description);
 
@@ -85,12 +72,41 @@ public class JSONWriter {
       Map<Character, List<Animation>> charactersToAnimations) throws IOException {
     ObjectMapper objectMapper = new ObjectMapper();
 
-    System.out.println("Attribute.getViewOrder():");
-    for (Attribute attribute : Attribute.getViewOrder()) {
-      System.out.print(attribute.name() + " ");
-    }
-    System.out.println();
+    objectMapper.writeValue(new File("json/charIdToName.json"),
+        Arrays.stream(Character.values())
+          .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
 
+    // TODO charIdToAttributes
+
+    objectMapper.writeValue(new File("json/charIdToSubactionIdToInfo.json"),
+        charactersToAnimations.entrySet().stream()
+          .collect(Collectors.toMap(
+              entry -> entry.getKey().name(),
+              entry -> entry.getValue().stream()
+                .collect(Collectors.toMap(
+                    animation -> animation.subActionId,
+                    animation -> animation.getInfo())))));
+
+
+    objectMapper.writeValue(new File("json/charIdToSubactionIdToStats.json"),
+        charactersToAnimations.entrySet().stream()
+          .collect(Collectors.toMap(
+              entry -> entry.getKey().name(),
+              entry -> entry.getValue().stream()
+                .collect(Collectors.toMap(
+                    animation -> animation.subActionId,
+                    animation -> animation.getStats())))));
+
+    objectMapper.writeValue(new File("json/charIdToSubactionIdToFrameStrip.json"),
+        charactersToAnimations.entrySet().stream()
+          .collect(Collectors.toMap(
+              entry -> entry.getKey().name(),
+              entry -> entry.getValue().stream()
+                .collect(Collectors.toMap(
+                    animation -> animation.subActionId,
+                    animation -> animation.getFrameStrip())))));
+
+    // TODO remove these jsons in favor of smaller ones above
     objectMapper.writeValue(new File("json/characters.json"),
         Arrays.stream(Character.values())
           .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
@@ -113,9 +129,12 @@ public class JSONWriter {
           .collect(Collectors.toMap(e -> e.getKey(), e -> e.getValue()))
     );
 
-    // map<charId, map<animationname, stats>>
+    // map<entryId, map<columnId, value>>
+    // map<charId-animationId, map<statName, statValue>>
+    // statName/statValue also needs Character->charname and Animation->animationname
+    /*Map<String, Map<String, String>> entryIdToStatNameToStatValue = new LinkedHashMap<>();
     objectMapper.writeValue(new File("json/move-stats.json"),
         charactersToAnimations.entrySet().stream()
-          .map(entry ->
+          .map(entry -> */
   }
 }

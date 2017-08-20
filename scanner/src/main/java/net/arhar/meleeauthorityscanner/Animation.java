@@ -2,20 +2,12 @@ package net.arhar.meleeauthorityscanner;
 
 import com.google.common.collect.Sets;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.Stack;
-import java.util.LinkedList;
-import java.util.TreeMap;
+import java.util.*;
 import net.arhar.meleeauthorityscanner.DatReader;
 import net.arhar.meleeauthorityscanner.DatReader.AJDataHeader;
 import net.arhar.meleeauthorityscanner.DatReader.SubActionHeader;
 
+// TODO make this a pojo and move animation simulation and json stuff to other classes
 public class Animation {
 
   public final float frameCount;
@@ -37,6 +29,73 @@ public class Animation {
   private Stack<Integer> callStack = new Stack<>();
 
   private boolean iasa = false, hitbox = false, autocancel = false, invulnerable = false, intangible = false;
+
+  // TODO all of these are for json and should probably be put somewhere else
+
+  Map<String, Object> getStats() {
+    Map<String, Object> stats = new LinkedHashMap<>();
+    //stats.put("internalName", animation.internalName);
+    //stats.put("subActionId", animation.subActionId);
+    stats.put("Active Frame", getActiveFrame());
+    stats.put("IASA Frame", getIasaFrame());
+    stats.put("Total Frames", frameCount);
+    stats.put("Max Damage", getMaxDamage());
+    stats.put("Max Base Knockback", getMaxBaseKnockback());
+    stats.put("Max Scaling Knockback", getMaxScalingKnockback());
+    stats.put("Fixed Knockback", getFixedKnockback());
+    /*stats.put("motherCommand.undefined0x10", String.format("0x%08X", animation.motherCommand.undefined0x10));
+    stats.put("motherCommand.undefined0x14", String.format("0x%08X", animation.motherCommand.undefined0x14));
+    stats.put("ajDataHeader.undefined0x10", String.format("0x%08X", animation.ajDataHeader.undefined0x10));
+    stats.put("ajDataHeader.undefined0x14", String.format("0x%08X", animation.ajDataHeader.undefined0x14));
+    stats.put("ajDataHeader.undefined0x18", String.format("0x%08X", animation.ajDataHeader.undefined0x18));
+    stats.put("ajDataHeader.undefined0x1C", String.format("0x%08X", animation.ajDataHeader.undefined0x1C));*/
+    return stats;
+  }
+
+  Map<String, Object> getInfo() {
+    Map<String, Object> info = new LinkedHashMap<>();
+    info.put("Description", description);
+    // TODO figure out what else should go here
+    return info;
+  }
+
+  List<Map<String, Object>> getFrameStrip() {
+    List<Map<String, Object>> frameStripJson = new ArrayList<>();
+    for (int i = 0; i < frameStrip.size(); i++) {
+      Map<String, Object> frameStripMap = new LinkedHashMap<>();
+      frameStripMap.put("Frame", i);
+      frameStripMap.put("Hitbox", frameStrip.get(i).hitbox);
+      frameStripMap.put("IASA", frameStrip.get(i).iasa);
+      frameStripMap.put("Autocancel", frameStrip.get(i).autocancel);
+      frameStripMap.put("Invulnerable", frameStrip.get(i).invulnerable);
+      frameStripMap.put("Intangible", frameStrip.get(i).intangible);
+      frameStripJson.add(frameStripMap);
+    }
+    return frameStripJson;
+  }
+
+  // TODO move this to some util class or something
+  private static String toHexString(byte[] data) {
+    StringBuilder builder = new StringBuilder();
+    builder.append("0x");
+    for (int i = 0; i < data.length; i++) {
+      builder.append(String.format("%02X", data[i]));
+    }
+    return builder.toString();
+  }
+
+  List<Map<String, Object>> getCommands() {
+    List<Map<String, Object>> commandsJson = new ArrayList<>();
+    for (int i = 0; i < commands.size(); i++) {
+      Map<String, Object> commandMap = new LinkedHashMap<>();
+      commandMap.put("Command Type", commands.get(i).type.name());
+      commandMap.put("Location", String.format("0x%08X", commands.get(i).location));
+      // TODO mark data as monospaced somehow?
+      commandMap.put("Data", toHexString(commands.get(i).data));
+      commandsJson.add(commandMap);
+    }
+    return commandsJson;
+  }
 
   int getActiveFrame() {
     for (int i = 0; i < frameStrip.size(); i++) {

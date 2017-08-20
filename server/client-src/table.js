@@ -24,33 +24,60 @@ class Table extends React.Component {
       pinnedEntryIds: []
     }
   }
-
-  sort() {
+  /*filter(regex) {
     console.log('todo');
-  }
+  }*/
 
-  filter(regex) {
-    console.log('todo');
+  handleColumnClick(e) {
+    const newSortColumnId = e.target.id;
+    if (this.state.sortColumnId == newSortColumnId) {
+      this.state.sortIncreasing = !this.state.sortIncreasing;
+    } else {
+      this.state.sortColumnId = e.target.id;
+    }
+    this.setState(this.state);
   }
 
   // TODO make comparison function work for numbers and strings
 
   render() {
-    const handleClick = this.sort.bind(this);
     const state = this.state;
     const props = this.props;
-    const headerRow = this.props.columnIds.map(function(columnId) {
-      return <th onClick={handleClick} id={columnId}>{props.columnNames[columnId]}</th>;
-      //return <th onClick={handleClick} id={columnId}>{columnId}</th>;
+    const handleColumnClick = this.handleColumnClick.bind(this);
+
+    const headerRow = this.props.columnIds.map((columnId) => {
+      var columnText = props.columnNames[columnId];
+      if (columnId == state.sortColumnId) {
+        if (state.sortIncreasing) {
+          columnText += ' \u25B2';
+        } else {
+          columnText += ' \u25BC';
+        }
+      }
+      return <th onClick={handleColumnClick} id={columnId}>{columnText}</th>;
     });
 
-    const rows = Object.keys(props.columnValues).map(function(entryId) {
-      const row = props.columnIds.map(function(columnId) {
-        return <td>{props.columnValues[entryId][columnId]}</td>;
+    const rows = Object.keys(props.columnValues)
+      .sort((entryIdOne, entryIdTwo) => {
+        const valueOne = props.columnValues[entryIdOne][state.sortColumnId];
+        const valueTwo = props.columnValues[entryIdTwo][state.sortColumnId];
+        if (this.state.sortIncreasing) {
+          if (valueOne.localeCompare) {
+            return valueOne.localeCompare(valueTwo);
+          }
+          return valueOne - valueTwo;
+        }
+        if (valueTwo.localeCompare) {
+          return valueTwo.localeCompare(valueTwo);
+        }
+        return valueTwo - valueOne;
+      })
+      .map((entryId) => {
+        const row = props.columnIds.map((columnId) => {
+          return <td>{props.columnValues[entryId][columnId]}</td>;
+        });
+        return <tr>{row}</tr>;
       });
-      //return <tr><td>{entryId}</td>{row}</tr>;
-      return <tr>{row}</tr>;
-    });
 
     // TODO add className attribute-table for monospacing?
     return (

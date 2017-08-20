@@ -4,6 +4,7 @@ class Table extends React.Component {
   // this.props.columnValues = map of entry id to map of column ids to values (entry id = charId)
   //
   // ?
+  // this.props.nameOverrideColumns = array of column ids which have overriden values for their entries
   // this.props.entryIdToName = map of entry id to visible entry name (first column)
   //
   // ?
@@ -38,12 +39,11 @@ class Table extends React.Component {
     this.setState(this.state);
   }
 
-  // TODO make comparison function work for numbers and strings
-
   render() {
     const state = this.state;
     const props = this.props;
     const handleColumnClick = this.handleColumnClick.bind(this);
+    const nameOverrideColumns = new Set(this.props.nameOverrideColumns);
 
     const headerRow = this.props.columnIds.map((columnId) => {
       var columnText = props.columnNames[columnId];
@@ -57,20 +57,25 @@ class Table extends React.Component {
       return <th onClick={handleColumnClick} id={columnId}>{columnText}</th>;
     });
 
+    const compare = (one, two) => {
+      if (one.localeCompare) {
+        return one.localeCompare(two);
+      }
+      return one - two;
+    }
+
     const rows = Object.keys(props.columnValues)
       .sort((entryIdOne, entryIdTwo) => {
-        const valueOne = props.columnValues[entryIdOne][state.sortColumnId];
-        const valueTwo = props.columnValues[entryIdTwo][state.sortColumnId];
+        var valueOne = props.columnValues[entryIdOne][state.sortColumnId];
+        var valueTwo = props.columnValues[entryIdTwo][state.sortColumnId];
+        if (nameOverrideColumns.has(state.sortColumnId)) {
+          valueOne = props.entryIdToName[valueOne];
+          valueTwo = props.entryIdToName[valueTwo];
+        }
         if (this.state.sortIncreasing) {
-          if (valueOne.localeCompare) {
-            return valueOne.localeCompare(valueTwo);
-          }
-          return valueOne - valueTwo;
+          return compare(valueOne, valueTwo);
         }
-        if (valueTwo.localeCompare) {
-          return valueTwo.localeCompare(valueTwo);
-        }
-        return valueTwo - valueOne;
+        return compare(valueTwo, valueOne);
       })
       .map((entryId) => {
         const row = props.columnIds.map((columnId) => {

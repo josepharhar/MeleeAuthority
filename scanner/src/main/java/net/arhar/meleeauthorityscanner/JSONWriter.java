@@ -74,7 +74,9 @@ public class JSONWriter {
 
     objectMapper.writeValue(new File("json/charIdToName.json"),
         Arrays.stream(Character.values())
-          .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
+          .collect(Collectors.toMap(
+              character -> character.name(),
+              character -> character.fullName)));
 
     // TODO charIdToAttributes
 

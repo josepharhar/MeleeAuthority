@@ -20,12 +20,15 @@ downloadJson(
     
     const entryIdToColumnIdToValue = {};
     Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
-      Object.keys(charIdToSubactionId[charId]).forEach((subactionId) => {
+      Object.keys(charIdToSubactionIdToStats[charId]).forEach((subactionId) => {
         const entryId = charId + subactionId;
+        if (!entryIdToColumnIdToValue[entryId]) {
+          entryIdToColumnIdToValue[entryId] = {};
+        }
         entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
-        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subActionId]['description'];
+        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subactionId]['description'];
         columnIds.forEach((columnId) => {
-          entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subActionId][columnId];
+          entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subactionId][columnId];
         });
       });
     });

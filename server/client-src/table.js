@@ -69,6 +69,7 @@ class Table extends React.Component {
         var valueOne = props.columnValues[entryIdOne][state.sortColumnId];
         var valueTwo = props.columnValues[entryIdTwo][state.sortColumnId];
         if (!valueOne) {
+          window.columnValues = props.columnValues;
           throw new Error('!valueOne entryIdOne: ' + entryIdOne + ', sortColumnId: ' + state.sortColumnId);
         }
         if (nameOverrideColumns.has(state.sortColumnId)) {

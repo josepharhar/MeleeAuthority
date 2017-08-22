@@ -1,7 +1,6 @@
 var express = require('express');
 var reactViews = require('express-react-views');
 var morgan = require('morgan');
-var babel = require('babel-core');
 var fs = require('fs');
 
 var characters = require('./json/characters.json');
@@ -9,6 +8,9 @@ var attributeDefinitions = require('./json/attributeDefinitions.json');
 var attributes = require('./json/attributes.json');
 var animations = require('./json/animations.json');
 var attributeKeys = require('./json/attributeKeys.json');
+
+var spawn = require('child_process').spawn;
+spawn('babel', ['client-src', '-d', 'client-build', '--watch']);
 
 var app = express();
 app.use(morgan('dev'));

@@ -22,18 +22,17 @@ downloadJson(
     Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
       Object.keys(charIdToSubactionIdToStats[charId]).forEach((subactionId) => {
         const entryId = charId + subactionId;
-        if (!entryIdToColumnIdToValue[entryId]) {
-          entryIdToColumnIdToValue[entryId] = {};
-        }
-        entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
-        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subactionId]['description'];
+        entryIdToColumnIdToValue[entryId] = {};
         columnIds.forEach((columnId) => {
           entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subactionId][columnId];
         });
+        entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
+        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subactionId]['description'];
       });
     });
 
-    const entryIdToName = {};
+    const entryIdToName = charIdToName;
+    window.entryIdToColumnIdToValue = entryIdToColumnIdToValue;
 
     ReactDOM.render(<Table
         columnIds={columnIds}

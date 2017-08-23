@@ -13,6 +13,10 @@ class HomeLayout extends React.Component {
       {
         name: 'Character Stats',
         link: '/character-stats'
+      },
+      {
+        name: 'Moves Table',
+        link: '/moves-table'
       }
     ];
   

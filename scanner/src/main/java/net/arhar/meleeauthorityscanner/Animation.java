@@ -54,7 +54,7 @@ public class Animation {
 
   Map<String, Object> getInfo() {
     Map<String, Object> info = new LinkedHashMap<>();
-    info.put("Description", description);
+    info.put("description", description);
     // TODO figure out what else should go here
     return info;
   }

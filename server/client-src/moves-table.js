@@ -8,6 +8,7 @@ downloadJson(
     const charIdToName = jsons[0];
     const charIdToSubactionIdToStats = jsons[1];
     const charIdToSubactionIdToInfo = jsons[2];
+    window.charIdToSubactionIdToInfo = jsons[2];
 
     const sampleStats = charIdToSubactionIdToStats['Ca'][0];
 
@@ -20,14 +21,20 @@ downloadJson(
     
     const entryIdToColumnIdToValue = {};
     Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
+      const charName = charIdToName[charId];
+
       Object.keys(charIdToSubactionIdToStats[charId]).forEach((subactionId) => {
-        const entryId = charId + subactionId;
-        entryIdToColumnIdToValue[entryId] = {};
-        columnIds.forEach((columnId) => {
-          entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subactionId][columnId];
-        });
-        entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
-        entryIdToColumnIdToValue[entryId]['Animation'] = charIdToSubactionIdToInfo[charId][subactionId]['description'];
+        const info = charIdToSubactionIdToInfo[charId][subactionId];
+
+        if (info['description']['viewCategory'] != 'ADVANCED') {
+          const entryId = charId + subactionId;
+          entryIdToColumnIdToValue[entryId] = {};
+          columnIds.forEach((columnId) => {
+            entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subactionId][columnId];
+          });
+          entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
+          entryIdToColumnIdToValue[entryId]['Animation'] = info['description']['description'];
+        }
       });
     });
 

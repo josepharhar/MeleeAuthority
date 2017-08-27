@@ -9,6 +9,7 @@ class BodyScripts extends React.Component {
       <script src="/static/react-dom.js"></script>
       <script src="/client-build/base.js"></script>
       <script src="/client-build/navbar.js"></script>
+      <script src="/client-build/analytics.js"></script>
     </div>);
   }
 }

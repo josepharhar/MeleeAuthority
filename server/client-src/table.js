@@ -79,7 +79,7 @@ class Table extends React.Component {
       .sort((entryIdOne, entryIdTwo) => {
         var valueOne = props.columnValues[entryIdOne][state.sortColumnId];
         var valueTwo = props.columnValues[entryIdTwo][state.sortColumnId];
-        if (!valueOne) {
+        if (valueOne == undefined) {
           window.columnValues = props.columnValues;
           throw new Error('!valueOne entryIdOne: ' + entryIdOne + ', sortColumnId: ' + state.sortColumnId);
         }

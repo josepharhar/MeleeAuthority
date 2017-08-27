@@ -2,10 +2,6 @@ class Navbar extends React.Component {
   render() {
     const navbarEntries = [
       {
-        name: 'Home',
-        link: '/',
-      },
-      {
         name: 'Characters',
         link: '/characters'
       },
@@ -21,10 +17,10 @@ class Navbar extends React.Component {
 
     const currentLink = window.location.pathname;
     const navbarLinks = navbarEntries.map((entry) => {
-      if (entry.link == currentLink) {
-        return <li><a href={entry.link}>{entry.name}</a></li>;
+      if (currentLink.startsWith(entry.link)) {
+        return <li key={entry.link}><a href={entry.link}>{entry.name}</a></li>;
       } else {
-        return <li className="active" ><a href={entry.link}>{entry.name}</a></li>;
+        return <li key={entry.link} className="active"><a href={entry.link}>{entry.name}</a></li>;
       }
     });
   
@@ -32,7 +28,7 @@ class Navbar extends React.Component {
       <nav className="navbar navbar-default">
 	<div className="container-fluid">
 	  <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	    <div className="navbar-brand">Melee Authority</div>
+	    <a className="navbar-brand" href="/">Melee Authority</a>
 	    <ul className="nav navbar-nav">
 	      {navbarLinks}
 	    </ul>

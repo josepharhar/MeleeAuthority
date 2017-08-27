@@ -37,7 +37,8 @@ public class Animation {
     //stats.put("internalName", animation.internalName);
     //stats.put("subActionId", animation.subActionId);
     stats.put("Active Frame", getActiveFrame());
-    stats.put("IASA Frame", getIasaFrame());
+    //stats.put("IASA Frame", getIasaFrame());
+    stats.put("IASA Frame", getNetLengthFrame());
     stats.put("Total Frames", frameCount);
     stats.put("Max Damage", getMaxDamage());
     stats.put("Max Base Knockback", getMaxBaseKnockback());

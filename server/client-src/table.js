@@ -1,3 +1,4 @@
+// TODO add hover text/links to rows/values
 class Table extends React.Component {
   // this.props.columnIds = array of column ids in viewing order
   // this.props.columnNames = map of column ids to column names
@@ -9,6 +10,8 @@ class Table extends React.Component {
   //
   // ?
   // this.props.entryColumnName = name of entry name type (Character)
+  //
+  // this.props.pin = boolean to enable pin feature
   //
   // this.state.sortColumnId = column id to sort by
   // this.state.sortIncreasing = direction to sort entries by
@@ -22,12 +25,20 @@ class Table extends React.Component {
     this.state = {
       sortColumnId: this.props.columnIds[0],
       sortIncreasing: true,
+      columnIdToFilters: {},
       pinnedEntryIds: []
     }
   }
-  /*filter(regex) {
-    console.log('todo');
-  }*/
+
+  addFilter(columnId, regex) {
+    this.state.columnIdToFilters[columnId] = regex;
+    this.setState(this.state);
+  }
+
+  removeFilter(columnId, regex) {
+    this.state.columnIdToFilters[columnId] = undefined;
+    this.setState(this.state);
+  }
 
   handleColumnClick(e) {
     const newSortColumnId = e.target.id;
@@ -80,6 +91,19 @@ class Table extends React.Component {
           return compare(valueOne, valueTwo);
         }
         return compare(valueTwo, valueOne);
+      })
+      .filter((entryId) => {
+        for (var i = 0; i < props.columnIds.length; i++) {
+          const columnId = props.columnIds[i];
+          if (state.columnIdToFilters[columnId]) {
+            const value = props.columnValues[entryId][columnId];
+            const filter = state.columnIdToFilters[columnId];
+            if (!value.match(filter)) {
+              return false;
+            }
+          }
+        }
+        return true;
       })
       .map((entryId) => {
         const row = props.columnIds.map((columnId) => {

@@ -41,10 +41,13 @@ downloadJson(
     const entryIdToName = charIdToName;
     window.entryIdToColumnIdToValue = entryIdToColumnIdToValue;
 
-    ReactDOM.render(<Table
+    const table = ReactDOM.render(<Table
         columnIds={columnIds}
         columnNames={columnIdToName}
         columnValues={entryIdToColumnIdToValue}
         entryIdToName={entryIdToName} />,
         document.getElementById('stats-container'));
+
+    // TODO could this be done faster if we could apply the filter before rendering?
+    //table.addFilter('Character', 'Marth');
 });

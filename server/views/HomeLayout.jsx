@@ -2,7 +2,6 @@ var React = require('react');
 var ButtonList = require('./ButtonList');
 var HeadScripts = require('./HeadScripts');
 var BodyScripts = require('./BodyScripts');
-const Navbar = require('./Navbar');
 
 class HomeLayout extends React.Component {
   render() {
@@ -28,7 +27,6 @@ class HomeLayout extends React.Component {
           <HeadScripts />
         </head>
         <body>
-          <Navbar />
           <div className="container">
             <h1>Melee Authority</h1>
             <ButtonList buttons={buttons}/>

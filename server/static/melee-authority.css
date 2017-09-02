@@ -75,8 +75,7 @@
   vertical-align: middle;
 }
 
-/* TODO make this centered */
-.loader {
+.spinner {
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
@@ -86,10 +85,16 @@
   margin: auto;
 }
 
+.spinner-container {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  align-items: center;
+}
+
 #stats-container {
   display: flex;
   justify-content: center;
-  /*height: 100vh;*/
   align-items: center;
 }
 

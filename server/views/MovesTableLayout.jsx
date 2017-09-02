@@ -1,5 +1,6 @@
 const React = require('react');
 const Layout = require('./Layout');
+const Spinner = require('./Spinner');
 
 class MovesTableLayout extends React.Component {
   render() {
@@ -15,7 +16,7 @@ class MovesTableLayout extends React.Component {
         </div>
         <div className="container-body">
           <div id="stats-container">
-            <div className="loader"></div>
+            <Spinner />
           </div>
         </div>
       </Layout>

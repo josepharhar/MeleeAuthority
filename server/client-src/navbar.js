@@ -15,21 +15,30 @@ class Navbar extends React.Component {
       }
     ];
 
+    const buttonClasses = 'link-button btn btn-info';
+    const activeButtonClasses = buttonClasses + buttonClasses + ' active';
+
     const currentLink = window.location.pathname;
     const navbarLinks = navbarEntries.map((entry) => {
       if (currentLink.startsWith(entry.link)) {
-        return <li key={entry.link}><a href={entry.link}>{entry.name}</a></li>;
+        return <li key={entry.link}><a className={activeButtonClasses} href={entry.link}>{entry.name}</a></li>;
       } else {
-        return <li key={entry.link} className="active"><a href={entry.link}>{entry.name}</a></li>;
+        //return <li key={entry.link}><a className={buttonClasses} href={entry.link}>{entry.name}</a></li>;
+        return <a className={buttonClasses} href={entry.link}>{entry.name}</a>;
       }
     });
+
+    var homeButtonClasses = buttonClasses + ' navbar-brand';
+    if (currentLink == '/') {
+      homeButtonClasses = activeButtonClasses + ' navbar-brand';
+    }
   
     return (
       <nav className="navbar navbar-default">
 	<div className="container-fluid">
 	  <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	    <a className="navbar-brand" href="/">Melee Authority</a>
 	    <ul className="nav navbar-nav">
+	    <a className={homeButtonClasses} href="/">Melee Authority</a>
 	      {navbarLinks}
 	    </ul>
 	    <form className="navbar-form navbar-left" role="search">

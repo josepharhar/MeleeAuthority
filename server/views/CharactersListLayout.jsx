@@ -31,8 +31,10 @@ class CharactersListLayout extends React.Component {
           <HeadScripts />
         </head>
         <body>
-          <div className="container">
+          <div className="container-head">
             <h1>Characters List</h1>
+          </div>
+          <div className="container-body">
             <div className="flex-container">
               <div className="flex-item">
                 <ButtonList buttons={buttons_one}/>

@@ -21,32 +21,31 @@ class Navbar extends React.Component {
     const currentLink = window.location.pathname;
     const navbarLinks = navbarEntries.map((entry) => {
       if (currentLink.startsWith(entry.link)) {
-        return <li key={entry.link}><a className={activeButtonClasses} href={entry.link}>{entry.name}</a></li>;
+        return <a className={activeButtonClasses} href={entry.link}>{entry.name}</a>;
       } else {
-        //return <li key={entry.link}><a className={buttonClasses} href={entry.link}>{entry.name}</a></li>;
         return <a className={buttonClasses} href={entry.link}>{entry.name}</a>;
       }
     });
 
-    var homeButtonClasses = buttonClasses + ' navbar-brand';
+    var homeButtonClasses = buttonClasses /*+ ' navbar-brand'*/;
     if (currentLink == '/') {
-      homeButtonClasses = activeButtonClasses + ' navbar-brand';
+      homeButtonClasses = activeButtonClasses /*+ ' navbar-brand'*/;
     }
   
     return (
       <nav className="navbar navbar-default">
-	<div className="container-fluid">
-	  <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-	    <ul className="nav navbar-nav">
-	    <a className={homeButtonClasses} href="/">Melee Authority</a>
-	      {navbarLinks}
-	    </ul>
-	    <form className="navbar-form navbar-left" role="search">
-	      <div className="form-group">
-	      </div>
-	    </form>
-	  </div>
-	</div>
+        <div className="container-fluid">
+          <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ol className="nav navbar-nav">
+              <a className={homeButtonClasses} href="/">Melee Authority</a>
+              {navbarLinks}
+            </ol>
+            <form className="navbar-form navbar-left" role="search">
+              <div className="form-group">
+              </div>
+            </form>
+          </div>
+        </div>
       </nav>
     );
   }

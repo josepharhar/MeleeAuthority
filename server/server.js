@@ -1,18 +1,18 @@
-var express = require('express');
-var reactViews = require('express-react-views');
-var morgan = require('morgan');
-var fs = require('fs');
+const express = require('express');
+const reactViews = require('express-react-views');
+const morgan = require('morgan');
+const fs = require('fs');
 
-var characters = require('./json/characters.json');
-var attributeDefinitions = require('./json/attributeDefinitions.json');
-var attributes = require('./json/attributes.json');
-var animations = require('./json/animations.json');
-var attributeKeys = require('./json/attributeKeys.json');
+const charIdToName = require('./json/charIdToName.json');
+const attributeDefinitions = require('./json/attributeDefinitions.json');
+const attributes = require('./json/attributes.json');
+const animations = require('./json/animations.json');
+const attributeKeys = require('./json/attributeKeys.json');
 
-var spawn = require('child_process').spawn;
+const spawn = require('child_process').spawn;
 spawn('babel', ['client-src', '-d', 'client-build', '--watch']);
 
-var app = express();
+const app = express();
 app.use(morgan('dev'));
 app.set('view engine', 'jsx');
 app.engine('jsx', reactViews.createEngine());
@@ -34,7 +34,7 @@ app.get('/moves-table', function(req, res) {
 });
 
 app.get('/character-table/:charId', function(req, res) {
-  var charId = req.params.charId;
+  const charId = req.params.charId;
   if (!character.hasOwnProperty(charId)) {
     // TODO return 404 or something
     console.log('could not find charId "' + charId + '"');
@@ -48,14 +48,14 @@ app.get('/character-table/:charId', function(req, res) {
 
 app.get('/characters', function(req, res) {
   res.render('CharactersListLayout', {
-    characters: characters
+    charIdToName: charIdToName
   });
 });
 
 app.get('/characters/:charId', function(req, res) {
-  //var charId = req.params.charId.toLowerCase();
-  var charId = req.params.charId;
-  if (!characters.hasOwnProperty(charId)) {
+  //const charId = req.params.charId.toLowerCase();
+  const charId = req.params.charId;
+  if (!charIdToName.hasOwnProperty(charId)) {
     // TODO return 404 or something
     console.log('could not find charId "' + charId + '"');
     return;
@@ -63,14 +63,14 @@ app.get('/characters/:charId', function(req, res) {
 
   res.render('CharacterLayout', {
     charId: charId,
-    character: characters[charId],
+    charName: charIdToName[charId],
     attributes: attributes[charId],
     animations: animations[charId],
     attribute_definitions: attributeDefinitions
   });
 });
 
-var findAnimation = function(animations, subActionId) {
+const findAnimation = function(animations, subActionId) {
   for (var i = 0; i < animations.length; i++) {
     if (animations[i].subActionId == subActionId) {
       return animations[i];
@@ -80,14 +80,14 @@ var findAnimation = function(animations, subActionId) {
 };
 
 app.get('/characters/:charId/:subActionId', function(req, res) {
-  var charId = req.params.charId;
-  if (!characters.hasOwnProperty(charId)) {
+  const charId = req.params.charId;
+  if (!charIdToName.hasOwnProperty(charId)) {
     // TODO return 404
     console.log('could not find charId "' + charId + '"');
     return;
   }
 
-  var animation = findAnimation(animations[charId], req.params.subActionId);
+  const animation = findAnimation(animations[charId], req.params.subActionId);
   if (animation == null) {
     // TODO return 404
     console.log('could not find subAction "' + req.params.subActionId + '" for character "' + charId + '"');
@@ -95,7 +95,7 @@ app.get('/characters/:charId/:subActionId', function(req, res) {
   }
 
   res.render('AnimationLayout', {
-    character: characters[charId],
+    charName: charIdToName[charId],
     animation: animation
   });
 });

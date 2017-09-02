@@ -67,8 +67,8 @@ var CharacterLayout = React.createClass({
     });
 
     return (
-      <Layout title={this.props.character}>
-        <h1>{this.props.character}</h1>
+      <Layout title={this.props.charName}>
+        <h1>{this.props.charName}</h1>
         <div className="flex-container">
           <div className="flex-item">
             <h2>Attributes</h2>

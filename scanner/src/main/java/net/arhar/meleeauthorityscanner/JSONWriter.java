@@ -109,9 +109,6 @@ public class JSONWriter {
                     animation -> animation.getFrameStrip())))));
 
     // TODO remove these jsons in favor of smaller ones above
-    objectMapper.writeValue(new File("json/characters.json"),
-        Arrays.stream(Character.values())
-          .collect(Collectors.toMap(character -> character.name(), character -> character.fullName)));
     objectMapper.writeValue(new File("json/attributeKeys.json"), // TODO this is gross
         Attribute.getViewOrder());
     objectMapper.writeValue(new File("json/attributeDefinitions.json"),

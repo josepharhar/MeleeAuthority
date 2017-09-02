@@ -1,9 +1,14 @@
-const urls = ['/json/attributes.json', '/json/attributeKeys.json', '/json/characters.json', '/json/attributeDefinitions.json'];
+const urls = [
+  '/json/attributes.json',
+  '/json/attributeKeys.json',
+  '/json/charIdToName.json',
+  '/json/attributeDefinitions.json'
+];
 
 downloadJson(urls, function(jsons) {
   const attributes = jsons[0];
   const attributeKeys = jsons[1];
-  const characters = jsons[2];
+  const charIdToName = jsons[2];
   const attributeDefinitions = jsons[3];
 
   const columnIds = ['charId'].concat(attributeKeys.filter(function(key) {
@@ -19,10 +24,10 @@ downloadJson(urls, function(jsons) {
   });
   var columnValues = attributes;
   //for (var charId in Object.keys(characters)) {
-  Object.keys(characters).forEach(function(charId) {
-    columnValues[charId].charId = characters[charId];
+  Object.keys(charIdToName).forEach(function(charId) {
+    columnValues[charId].charId = charIdToName[charId];
   });
-  const entryIdToName = characters;
+  const entryIdToName = charIdToName;
 
   ReactDOM.render(<Table
       columnIds={columnIds}

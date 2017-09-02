@@ -184,7 +184,7 @@ class StatsTable extends React.Component {
 class AnimationLayout extends React.Component {
   render() {
     var animation = this.props.animation;
-    var title = this.props.character + ' - ' + animation.description.description;
+    var title = this.props.charName + ' - ' + animation.description.description;
 
     var hitboxTables = Object.keys(animation.frameToHitboxes).map(function(frame) {
       // TODO decide what to do with multiple hitbox groups, like color each differently

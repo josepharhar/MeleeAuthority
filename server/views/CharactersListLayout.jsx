@@ -4,12 +4,12 @@ const ButtonList = require('./ButtonList');
 
 class CharactersListLayout extends React.Component {
   render() {
-    var characters = this.props.characters;
-    var numCharacters = Object.keys(characters).length;
+    const charIdToName = this.props.charIdToName;
+    var numCharacters = Object.keys(charIdToName).length;
 
-    var buttons = Object.keys(characters).map(function(charId) {
+    var buttons = Object.keys(charIdToName).map(function(charId) {
       return {
-        name: characters[charId],
+        name: charIdToName[charId],
         link: '/characters/' + charId
       };
     }).sort(function(one, two) {

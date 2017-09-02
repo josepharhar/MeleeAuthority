@@ -1,7 +1,6 @@
-var React = require('react');
-var ButtonList = require('./ButtonList');
-var HeadScripts = require('./HeadScripts');
-var BodyScripts = require('./BodyScripts');
+const React = require('react');
+const Layout = require('./Layout');
+const ButtonList = require('./ButtonList');
 
 class HomeLayout extends React.Component {
   render() {
@@ -19,21 +18,14 @@ class HomeLayout extends React.Component {
         link: '/moves-table'
       }
     ];
-  
+
     return (
-      <html>
-        <head>
-          <title>Melee Authority</title>
-          <HeadScripts />
-        </head>
-        <body>
-          <div className="container">
-            <h1>Melee Authority</h1>
-            <ButtonList buttons={buttons}/>
-          </div>
-          <BodyScripts />
-        </body>
-      </html>
+      <Layout title={'Melee Authority'}>
+        <div className="container">
+          <h1>Melee Authority</h1>
+          <ButtonList buttons={buttons} />
+        </div>
+      </Layout>
     );
   }
 }

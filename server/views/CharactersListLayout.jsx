@@ -1,7 +1,6 @@
-var React = require('react');
-var ButtonList = require('./ButtonList');
-var HeadScripts = require('./HeadScripts');
-var BodyScripts = require('./BodyScripts');
+const React = require('react');
+const Layout = require('./Layout');
+const ButtonList = require('./ButtonList');
 
 class CharactersListLayout extends React.Component {
   render() {
@@ -25,31 +24,24 @@ class CharactersListLayout extends React.Component {
     var buttons_three = buttons.slice(two_thirds);
 
     return (
-      <html>
-        <head>
-          <title>Characters List</title>
-          <HeadScripts />
-        </head>
-        <body>
-          <div className="container-head">
-            <h1>Characters List</h1>
-          </div>
-          <div className="container-body">
-            <div className="flex-container">
-              <div className="flex-item">
-                <ButtonList buttons={buttons_one}/>
-              </div>
-              <div className="flex-item">
-                <ButtonList buttons={buttons_two}/>
-              </div>
-              <div className="flex-item">
-                <ButtonList buttons={buttons_three}/>
-              </div>
+      <Layout title={'Characters List'}>
+        <div className="container-head">
+          <h1>Characters List</h1>
+        </div>
+        <div className="container-body">
+          <div className="flex-container">
+            <div className="flex-item">
+              <ButtonList buttons={buttons_one}/>
+            </div>
+            <div className="flex-item">
+              <ButtonList buttons={buttons_two}/>
+            </div>
+            <div className="flex-item">
+              <ButtonList buttons={buttons_three}/>
             </div>
           </div>
-          <BodyScripts />
-        </body>
-      </html>
+        </div>
+      </Layout>
     );
   }
 }

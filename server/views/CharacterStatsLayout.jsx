@@ -1,29 +1,24 @@
 const React = require('react');
-const HeadScripts = require('./HeadScripts');
-const BodyScripts = require('./BodyScripts');
+const Layout = require('./Layout');
 
 class CharacterStatsLayout extends React.Component {
   render() {
+    const scripts = [
+      '/client-build/table.js',
+      '/client-build/stats.js'
+    ];
+
     return (
-      <html>
-        <head>
-          <title>Character Stats</title>
-          <HeadScripts />
-        </head>
-        <body>
-          <div className="container-head">
-            <h1>Character Stats</h1>
+      <Layout title={'Character Stats'} scripts={scripts}>
+        <div className="container-head">
+          <h1>Character Stats</h1>
+        </div>
+        <div className="container-body">
+          <div id="stats-container">
+            <div className="loader"></div>
           </div>
-          <div className="container-body">
-            <div id="stats-container">
-              <div className="loader"></div>
-            </div>
-          </div>
-          <BodyScripts />
-          <script src="/client-build/table.js"></script>
-          <script src="/client-build/stats.js"></script>
-        </body>
-      </html>
+        </div>
+      </Layout>
     );
   }
 }

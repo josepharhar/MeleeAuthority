@@ -1,7 +1,6 @@
-var React = require('react');
-var ButtonList = require('./ButtonList');
-var HeadScripts = require('./HeadScripts');
-var BodyScripts = require('./BodyScripts');
+const React = require('react');
+const Layout = require('./Layout');
+const ButtonList = require('./ButtonList');
 
 var CharacterAttributes = React.createClass({
   render: function() {
@@ -68,29 +67,20 @@ var CharacterLayout = React.createClass({
     });
 
     return (
-      <html>
-        <head>
-          <title>{this.props.character}</title>
-          <HeadScripts />
-        </head>
-        <body>
-          <div className="container">
-            <h1>{this.props.character}</h1>
-            <div className="flex-container">
-              <div className="flex-item">
-                <h2>Attributes</h2>
-                <CharacterAttributes
-                  attributes={this.props.attributes}
-                  attribute_definitions={this.props.attribute_definitions}/>
-              </div>
-              <div className="flex-item">
-                {buttons}
-              </div>
-            </div>
+      <Layout title={this.props.character}>
+        <h1>{this.props.character}</h1>
+        <div className="flex-container">
+          <div className="flex-item">
+            <h2>Attributes</h2>
+            <CharacterAttributes
+              attributes={this.props.attributes}
+              attribute_definitions={this.props.attribute_definitions}/>
           </div>
-          <BodyScripts />
-        </body>
-      </html>
+          <div className="flex-item">
+            {buttons}
+          </div>
+        </div>
+      </Layout>
     );
   }
 });

@@ -1,6 +1,5 @@
-var React = require('react');
-var HeadScripts = require('./HeadScripts');
-var BodyScripts = require('./BodyScripts');
+const React = require('react');
+const Layout = require('./Layout');
 
 var toTableHead = function(entries) {
   return entries.map(function(entry) {
@@ -193,37 +192,28 @@ class AnimationLayout extends React.Component {
     });
 
     return (
-      <html>
-        <head>
-          <title>{title}</title>
-          <HeadScripts />
-        </head>
-        <body>
-          <div className="container">
-            <h1>{title}</h1>
-            <div className="flex-container">
-              <div className="flex-item">
-                <h2>Hitboxes</h2>
-                {hitboxTables}
-              </div>
-              <div className="flex-item">
-                <h2>Frame Strip</h2>
-                <FrameStripTable frameStrip={animation.frameStrip}/>
-              </div>
-              <div className="flex-item">
-                <h2>Animation Commands</h2>
-                <AnimationCommandsTable commands={animation.commands}/>
-              </div>
-              <div className="flex-item">
-                <h2>Stats</h2>
-                <StatsTable stats={animation.stats}/>
-              </div>
-            </div>
+      <Layout title={title}>
+        <h1>{title}</h1>
+        <div className="flex-container">
+          <div className="flex-item">
+            <h2>Hitboxes</h2>
+            {hitboxTables}
           </div>
-          <BodyScripts />
-          <script src='/static/animation.js'></script>
-        </body>
-      </html>
+          <div className="flex-item">
+            <h2>Frame Strip</h2>
+            <FrameStripTable frameStrip={animation.frameStrip}/>
+          </div>
+          <div className="flex-item">
+            <h2>Animation Commands</h2>
+            <AnimationCommandsTable commands={animation.commands}/>
+          </div>
+          <div className="flex-item">
+            <h2>Stats</h2>
+            <StatsTable stats={animation.stats}/>
+          </div>
+        </div>
+        <script src='/static/animation.js'></script>
+      </Layout>
     );
   }
 }

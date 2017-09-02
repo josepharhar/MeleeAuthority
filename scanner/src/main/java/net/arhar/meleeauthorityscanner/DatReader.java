@@ -54,7 +54,7 @@ public class DatReader {
         AJDataHeader ajDataHeader = new AJDataHeader(ajdat, ajRootNode);
 
         // read this animation
-        animations.add(new Animation(pldat, motherCommand, ajDataHeader, character, i));
+        animations.add(AnimationGenerator.generate(pldat, motherCommand, ajDataHeader, character, i));
       }
 
       charactersToAnimations.put(character, animations);

@@ -9,7 +9,6 @@ class Head extends React.Component {
           <link rel="stylesheet" href="/static/bootstrap-cyborg.min.css" />
           <link rel="stylesheet" href="/static/narrow-jumbotron.css" />
           <link rel="stylesheet" href="/static/melee-authority.css" />
-          <div id="navbar"></div>
         </head>
     );
   }

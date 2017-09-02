@@ -65,7 +65,7 @@ class Table extends React.Component {
           columnText += ' \u25BC';
         }
       }
-      return <th onClick={handleColumnClick} id={columnId}>{columnText}</th>;
+      return <th key={columnId} onClick={handleColumnClick} id={columnId}>{columnText}</th>;
     });
 
     const compare = (one, two) => {
@@ -107,9 +107,11 @@ class Table extends React.Component {
       })
       .map((entryId) => {
         const row = props.columnIds.map((columnId) => {
-          return <td>{props.columnValues[entryId][columnId]}</td>;
+          const value = props.columnValues[entryId][columnId];
+          const key = entryId + columnId;
+          return <td key={key}>{value}</td>;
         });
-        return <tr>{row}</tr>;
+        return <tr key={entryId}>{row}</tr>;
       });
 
     // TODO add className attribute-table for monospacing?

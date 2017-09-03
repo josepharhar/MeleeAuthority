@@ -26,8 +26,14 @@ class Table extends React.Component {
       sortColumnId: this.props.columnIds[0],
       sortIncreasing: true,
       columnIdToFilters: {},
+      rowFilter: null,
       pinnedEntryIds: []
     }
+  }
+
+  addRowFilter(regex) {
+    this.state.rowFilter = regex;
+    this.setState(this.state);
   }
 
   addFilter(columnId, regex) {
@@ -104,6 +110,20 @@ class Table extends React.Component {
           }
         }
         return true;
+      })
+      .filter((entryId) => {
+        if (!state.rowFilter) {
+          return true;
+        }
+        var matched = false;
+        for (var i = 0; i < props.columnIds.length; i++) {
+          const columnId = props.columnIds[i];
+          // state.rowFilter must match at least one of the column values
+          if (props.columnValues[entryId][columnId].match(state.rowFilter)) {
+            matched = true;
+          }
+        }
+        return matched;
       })
       .map((entryId) => {
         const row = props.columnIds.map((columnId) => {

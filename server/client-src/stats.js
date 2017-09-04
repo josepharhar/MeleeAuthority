@@ -35,4 +35,8 @@ downloadJson(urls, function(jsons) {
       columnValues={columnValues}
       entryIdToName={entryIdToName} />,
       document.getElementById('stats-container'));
+
+  $(document).ready(() => {
+    $('#table').DataTable();
+  });
 });

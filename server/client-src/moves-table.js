@@ -8,18 +8,12 @@ downloadJson(
     const charIdToName = jsons[0];
     const charIdToSubactionIdToStats = jsons[1];
     const charIdToSubactionIdToInfo = jsons[2];
-    window.charIdToSubactionIdToInfo = jsons[2];
 
     const sampleStats = charIdToSubactionIdToStats['Ca'][0];
-
-    const columnIds = ['Character', 'Animation'].concat(Object.keys(sampleStats));
-    // TODO this shouldnt be necessary?
-    const columnIdToName = {};
-    columnIds.forEach((columnId) => {
-      columnIdToName[columnId] = columnId;
-    });
+    const columnIds = Object.keys(sampleStats);
+    const columns = ['Character', 'Animation'].concat(columnIds);
     
-    const entryIdToColumnIdToValue = {};
+    const data = [];
     Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
       const charName = charIdToName[charId];
 
@@ -27,28 +21,23 @@ downloadJson(
         const info = charIdToSubactionIdToInfo[charId][subactionId];
 
         if (info['description']['viewCategory'] != 'ADVANCED') {
-          const entryId = charId + subactionId;
-          entryIdToColumnIdToValue[entryId] = {};
+          const columnValues = [];
+          columnValues.push(charId);
+          columnValues.push(subactionId);
           columnIds.forEach((columnId) => {
-            entryIdToColumnIdToValue[entryId][columnId] = charIdToSubactionIdToStats[charId][subactionId][columnId];
+            columnValues.push(charIdToSubactionIdToStats[charId][subactionId][columnId]);
           });
-          entryIdToColumnIdToValue[entryId]['Character'] = charIdToName[charId];
-          entryIdToColumnIdToValue[entryId]['Animation'] = info['description']['description'];
+          data.push(columnValues);
         }
       });
     });
 
     const entryIdToName = charIdToName;
 
-    const table = ReactDOM.render(
-        <Table
-          columnIds={columnIds}
-          columnNames={columnIdToName}
-          columnValues={entryIdToColumnIdToValue}
-          entryIdToName={entryIdToName} />
-        document.getElementById('stats-container'));
-
     $(document).ready(() => {
-      $('table').DataTable();
+      $('table').DataTable({
+        data: data,
+        columns: columns
+      });
     });
 });

@@ -18,6 +18,7 @@ app.set('view engine', 'jsx');
 app.engine('jsx', reactViews.createEngine());
 
 app.use('/static', express.static('static'));
+app.use('/fonts', express.static('fonts'));
 app.use('/json', express.static('json'));
 app.use('/client-build', express.static('client-build'));
 

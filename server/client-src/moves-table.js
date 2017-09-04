@@ -11,7 +11,9 @@ downloadJson(
 
     const sampleStats = charIdToSubactionIdToStats['Ca'][0];
     const columnIds = Object.keys(sampleStats);
-    const columns = ['Character', 'Animation'].concat(columnIds);
+    const columns = ['Character', 'Animation'].concat(columnIds).map((columnId) => {
+      return { title: columnId };
+    });
     
     const data = [];
     Object.keys(charIdToSubactionIdToStats).forEach((charId) => {
@@ -36,8 +38,8 @@ downloadJson(
 
     $(document).ready(() => {
       $('table').DataTable({
-        data: data,
-        columns: columns
+        columns: columns,
+        data: data
       });
     });
 });

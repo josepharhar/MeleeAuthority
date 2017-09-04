@@ -34,8 +34,6 @@ downloadJson(
       });
     });
 
-    const entryIdToName = charIdToName;
-
     $(document).ready(() => {
       $('table').DataTable({
         columns: columns,

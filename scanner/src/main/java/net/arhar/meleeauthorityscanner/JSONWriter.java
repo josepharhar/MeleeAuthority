@@ -108,6 +108,20 @@ public class JSONWriter {
                     animation -> animation.subActionId,
                     animation -> animation.getFrameStrip())))));
 
+    objectMapper.writeValue(new File("json/attributeIdToInfo.json"),
+        Arrays.stream(Attribute.values())
+          .collect(Collectors.toMap(
+              attribute -> attribute.name(),
+              attribute -> ImmutableMap.of(
+                "fullName", attribute.fullName,
+                "viewCategory", attribute.viewCategory.name()))));
+
+    objectMapper.writeValue(new File("json/charIdToAttributeIdToValue.json"),
+        charactersToAttributes.entrySet().stream()
+          .collect(Collectors.toMap(
+              entry -> entry.getKey().name(),
+              entry -> entry.getValue())));
+
     // TODO remove these jsons in favor of smaller ones above
     objectMapper.writeValue(new File("json/attributeKeys.json"), // TODO this is gross
         Attribute.getViewOrder());

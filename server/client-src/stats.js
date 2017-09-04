@@ -1,42 +1,42 @@
 const urls = [
-  '/json/attributes.json',
-  '/json/attributeKeys.json',
   '/json/charIdToName.json',
-  '/json/attributeDefinitions.json'
+  '/json/attributeIdToInfo.json',
+  '/json/charIdToAttributeIdToValue.json'
 ];
 
 downloadJson(urls, (jsons) => {
-  const attributes = jsons[0];
-  const attributeKeys = jsons[1];
-  const charIdToName = jsons[2];
-  const attributeDefinitions = jsons[3];
+  const charIdToName = jsons[0];
+  const attributeIdToInfo = jsons[1];
+  const charIdToAttributeIdToValues = jsons[2];
 
-  const columnIds = ['charId'].concat(attributeKeys.filter(function(key) {
-    return attributeDefinitions[key].viewCategory == 'BASIC';
-  }));
-  var columnNames = {};
-  columnIds.forEach(function(columnId) {
-    var columnName = columnId;
-    if (columnId == 'charId') {
-      columnName = 'Character';
-    }
-    columnNames[columnId] = columnName;
-  });
-  var columnValues = attributes;
-  //for (var charId in Object.keys(characters)) {
-  Object.keys(charIdToName).forEach(function(charId) {
-    columnValues[charId].charId = charIdToName[charId];
-  });
-  const entryIdToName = charIdToName;
+  const attributeIds = Object.keys(attributeIdToInfo)
+    .filter((attributeId) => {
+      return attributeIdToInfo[attributeId]['viewCategory'] == 'BASIC';
+    });
+  const attributeColumns = attributeIds
+    .map((attributeId) => {
+      return attributeIdToInfo[attributeId]['fullName'];
+    });
+  const columns = ['Character'].concat(attributeColumns)
+    .map((column) => {
+      return { title: column };
+    });
 
-  ReactDOM.render(<Table
-      columnIds={columnIds}
-      columnNames={columnNames}
-      columnValues={columnValues}
-      entryIdToName={entryIdToName} />,
-      document.getElementById('stats-container'));
+  const data = [];
+  Object.keys(charIdToAttributeIdToValues).forEach((charId) => {
+    const attributeValues = [];
+    attributeValues.push(charIdToName[charId]);
+    attributeIds.forEach((attributeId) => {
+      attributeValues.push(charIdToAttributeIdToValues[charId][attributeId]);
+    });
+    data.push(attributeValues);
+  });
 
   $(document).ready(() => {
-    $('#table').DataTable();
+    $('table').DataTable({
+      columns: columns,
+      data: data
+    });
+    $('.spinner-container').remove();
   });
 });

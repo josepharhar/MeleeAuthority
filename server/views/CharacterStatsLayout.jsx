@@ -15,9 +15,8 @@ class CharacterStatsLayout extends React.Component {
           <h1>Character Stats</h1>
         </div>
         <div className="container-body">
-          <div id="stats-container">
-            <Spinner />
-          </div>
+          <table id='table' className='table table-hover table-bordered'></table>
+          <Spinner />
         </div>
       </Layout>
     );

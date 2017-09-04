@@ -41,5 +41,6 @@ downloadJson(
         columns: columns,
         data: data
       });
+      $('.spinner-container').remove();
     });
 });

@@ -5,7 +5,7 @@ const urls = [
   '/json/attributeDefinitions.json'
 ];
 
-downloadJson(urls, function(jsons) {
+downloadJson(urls, (jsons) => {
   const attributes = jsons[0];
   const attributeKeys = jsons[1];
   const charIdToName = jsons[2];

@@ -15,10 +15,8 @@ class MovesTableLayout extends React.Component {
           <h1>Moves Table</h1>
         </div>
         <div className="container-body">
-          <table id="table"></table>
-          <div id="stats-container">
-            <Spinner />
-          </div>
+          <table id='table' className='table table-hover table-bordered'></table>
+          <Spinner />
         </div>
       </Layout>
     );

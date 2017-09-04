@@ -8,6 +8,7 @@ downloadJson(
     const charIdToName = jsons[0];
     const charIdToSubactionIdToStats = jsons[1];
     const charIdToSubactionIdToInfo = jsons[2];
+    window.asdf = charIdToSubactionIdToInfo;
 
     const sampleStats = charIdToSubactionIdToStats['Ca'][0];
     const columnIds = Object.keys(sampleStats);
@@ -24,10 +25,14 @@ downloadJson(
 
         if (info['description']['viewCategory'] != 'ADVANCED') {
           const columnValues = [];
-          columnValues.push(charId);
-          columnValues.push(subactionId);
+          columnValues.push(charIdToName[charId]);
+          columnValues.push(info['description']['description']);
           columnIds.forEach((columnId) => {
-            columnValues.push(charIdToSubactionIdToStats[charId][subactionId][columnId]);
+            var value = charIdToSubactionIdToStats[charId][subactionId][columnId];
+            if (value == -1) {
+              value = '';
+            }
+            columnValues.push(value);
           });
           data.push(columnValues);
         }

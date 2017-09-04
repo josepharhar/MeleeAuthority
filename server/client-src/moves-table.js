@@ -39,36 +39,16 @@ downloadJson(
     });
 
     const entryIdToName = charIdToName;
-    window.entryIdToColumnIdToValue = entryIdToColumnIdToValue;
 
-    const rowFilterName = 'row-filter'
-
-    /*var table;
-    const onchange = (e) => {
-      const text = document.getElementById(rowFilterName).value;
-      table.addRowFilter(text);
-    };*/
-
-    const statsContainer = (
-      <div>
-        <div className="form-group">
-          <label>Row Filter:</label>
-          <input id={rowFilterName} type="text" className="form-control" onChange={onchange}></input>
-        </div>
+    const table = ReactDOM.render(
         <Table
           columnIds={columnIds}
           columnNames={columnIdToName}
           columnValues={entryIdToColumnIdToValue}
           entryIdToName={entryIdToName} />
-      </div>
-    );
-
-    const table = ReactDOM.render(
-        statsContainer,
         document.getElementById('stats-container'));
-    table.addRowFilter('Marth');
-    window.table = table;
 
-    // TODO could this be done faster if we could apply the filter before rendering?
-    //table.addFilter('Character', 'Marth');
+    $(document).ready(() => {
+      $('table').DataTable();
+    });
 });

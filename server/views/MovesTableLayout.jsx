@@ -5,7 +5,6 @@ const Spinner = require('./Spinner');
 class MovesTableLayout extends React.Component {
   render() {
     const scripts = [
-      '/client-build/table.js',
       '/client-build/moves-table.js'
     ];
 

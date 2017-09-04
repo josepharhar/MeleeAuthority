@@ -5,7 +5,6 @@ const Spinner = require('./Spinner');
 class CharacterStatsLayout extends React.Component {
   render() {
     const scripts = [
-      '/client-build/table.js',
       '/client-build/stats.js'
     ];
 

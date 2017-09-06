@@ -22,6 +22,10 @@ app.use('/fonts', express.static('fonts'));
 app.use('/json', express.static('json'));
 app.use('/client-build', express.static('client-build'));
 
+app.get('/favicon.ico', function(req, res) {
+  res.sendFile(__dirname + '/static/favicon.ico');
+});
+
 app.get('/', function(req, res) {
   res.render('HomeLayout');
 });

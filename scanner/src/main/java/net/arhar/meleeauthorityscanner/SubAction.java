@@ -28,11 +28,15 @@ import static net.arhar.meleeauthorityscanner.Character.Zd;
 import static net.arhar.meleeauthorityscanner.SubAction.SubActionCategory.*;
 import static net.arhar.meleeauthorityscanner.ViewCategory.*;
 
-import java.util.Map;
-
 import com.google.common.collect.ImmutableMap;
+import java.util.*;
+import lombok.*;
 
 public class SubAction {
+
+  // TODO replace SUBACTIONS map with this
+  //private static final Map<Integer, Map<Character, List<SubAction>>> subactionIdToCharacterToSubaction = new HashMap<>();
+  // TODO merge SubAction and SubActionDescription, use lombok builder so I can say builder.withAllCharacters() and stuff
 
   private static final Map<Integer, SubAction> SUBACTIONS = ImmutableMap.<Integer, SubAction>builder()
 
